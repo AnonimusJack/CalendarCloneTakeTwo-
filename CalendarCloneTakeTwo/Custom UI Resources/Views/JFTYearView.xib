@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16095" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16084.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="JFTYearView" customModule="CalendarCloneTakeTwo" customModuleProvider="target">
+            <connections>
+                <outlet property="MonthsLayoutView" destination="0za-Wy-Pod" id="XoV-08-do5"/>
+                <outlet property="YearLable" destination="9bu-n6-i7J" id="4KU-a5-BT0"/>
+                <outlet property="monthsLayoutView" destination="0za-Wy-Pod" id="nOz-cO-7G7"/>
+                <outlet property="view" destination="iN0-l3-epB" id="6vb-gh-Onm"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9bu-n6-i7J">
+                    <rect key="frame" x="8" y="8" width="106" height="37"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="106" id="kKJ-FO-eJi"/>
+                        <constraint firstAttribute="height" constant="37" id="wZM-lA-HRz"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0za-Wy-Pod">
+                    <rect key="frame" x="0.0" y="45" width="375" height="578"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                </view>
+            </subviews>
+            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+            <constraints>
+                <constraint firstItem="0za-Wy-Pod" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="45" id="SZH-Xh-G4t"/>
+                <constraint firstItem="0za-Wy-Pod" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="Unz-TQ-YLN"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="0za-Wy-Pod" secondAttribute="bottom" constant="44" id="VRQ-k5-1wp"/>
+                <constraint firstItem="9bu-n6-i7J" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="8" id="fUp-1f-Rpk"/>
+                <constraint firstItem="9bu-n6-i7J" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="8" id="jNa-wc-Ts3"/>
+                <constraint firstItem="0za-Wy-Pod" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="yQN-es-aEC"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="132" y="151.57421289355324"/>
+        </view>
+    </objects>
+</document>
