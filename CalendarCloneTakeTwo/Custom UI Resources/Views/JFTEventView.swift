@@ -15,6 +15,7 @@ class JFTEventView: UIView
     @IBOutlet weak var EventLocationLabel: UILabel!
     private static var xibName = "JFTEventView"
     private var colorCode: UIColor = UIColor.systemBlue
+    var EventID: String = ""
     
     override init(frame: CGRect)
     {
@@ -46,6 +47,8 @@ class JFTEventView: UIView
         self.frame = CGRect(x: 40.0, y: CGFloat(eventViewCorrectYPosition), width: self.frame.width, height: eventViewHeight)
         EventTitleLabel.text = event.Title
         EventLocationLabel.text = event.Location
+        EventTitleLabel.textColor = colorCode
+        EventLocationLabel.textColor = colorCode.withAlphaComponent(0.7)
         self.view.setNeedsDisplay()
     }
     

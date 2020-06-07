@@ -34,6 +34,7 @@
 		893B632C2472C2C100BF30E0 /* JFTWeekView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 893B632B2472C2C100BF30E0 /* JFTWeekView.xib */; };
 		893B632E2472C41300BF30E0 /* JFTYearViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893B632D2472C41300BF30E0 /* JFTYearViewController.swift */; };
 		893B63302472C54800BF30E0 /* JFTDayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893B632F2472C54800BF30E0 /* JFTDayViewController.swift */; };
+		89585889248A54750087B28D /* JFTPRefreshable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89585888248A54750087B28D /* JFTPRefreshable.swift */; };
 		895D4D2D247CFC6500BA4D51 /* JFTShortCalendarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895D4D2C247CFC6500BA4D51 /* JFTShortCalendarTableViewCell.swift */; };
 		895D4D2F247CFCF700BA4D51 /* JFTAEEventCalendarTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895D4D2E247CFCF700BA4D51 /* JFTAEEventCalendarTableViewController.swift */; };
 		895D4D31247CFE9D00BA4D51 /* UITableViewExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895D4D30247CFE9D00BA4D51 /* UITableViewExt.swift */; };
@@ -45,6 +46,9 @@
 		895FA7462477DC430031A9BA /* JFTMonthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895FA7452477DC430031A9BA /* JFTMonthViewController.swift */; };
 		8960B4F82483C1CD0066518D /* JFTJSONSerializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8960B4F72483C1CD0066518D /* JFTJSONSerializable.swift */; };
 		8960B4FA2483C4C00066518D /* UIColorExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8960B4F92483C4C00066518D /* UIColorExt.swift */; };
+		8961EE962487AEBC00E68A1A /* JFTEventTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8961EE952487AEBC00E68A1A /* JFTEventTableViewCell.swift */; };
+		8965BEC524855B6C00809B77 /* JFTEventSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8965BEC424855B6C00809B77 /* JFTEventSearchViewController.swift */; };
+		8965BEC724855C5B00809B77 /* JFTEventSearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8965BEC624855C5B00809B77 /* JFTEventSearchEngine.swift */; };
 		89679FEC2473D52B00B9171F /* JFTAEEventRepeatsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89679FEB2473D52B00B9171F /* JFTAEEventRepeatsTableViewController.swift */; };
 		89679FEE2473D5C200B9171F /* JFTAEEventAlertTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89679FED2473D5C200B9171F /* JFTAEEventAlertTableViewController.swift */; };
 		89679FF32473D69300B9171F /* JFTCalendarsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89679FF22473D69300B9171F /* JFTCalendarsTableViewController.swift */; };
@@ -83,6 +87,7 @@
 		893B632B2472C2C100BF30E0 /* JFTWeekView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = JFTWeekView.xib; sourceTree = "<group>"; };
 		893B632D2472C41300BF30E0 /* JFTYearViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JFTYearViewController.swift; sourceTree = "<group>"; };
 		893B632F2472C54800BF30E0 /* JFTDayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JFTDayViewController.swift; sourceTree = "<group>"; };
+		89585888248A54750087B28D /* JFTPRefreshable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JFTPRefreshable.swift; sourceTree = "<group>"; };
 		895D4D2C247CFC6500BA4D51 /* JFTShortCalendarTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JFTShortCalendarTableViewCell.swift; sourceTree = "<group>"; };
 		895D4D2E247CFCF700BA4D51 /* JFTAEEventCalendarTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JFTAEEventCalendarTableViewController.swift; sourceTree = "<group>"; };
 		895D4D30247CFE9D00BA4D51 /* UITableViewExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewExt.swift; sourceTree = "<group>"; };
@@ -94,6 +99,9 @@
 		895FA7452477DC430031A9BA /* JFTMonthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JFTMonthViewController.swift; sourceTree = "<group>"; };
 		8960B4F72483C1CD0066518D /* JFTJSONSerializable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JFTJSONSerializable.swift; sourceTree = "<group>"; };
 		8960B4F92483C4C00066518D /* UIColorExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExt.swift; sourceTree = "<group>"; };
+		8961EE952487AEBC00E68A1A /* JFTEventTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JFTEventTableViewCell.swift; sourceTree = "<group>"; };
+		8965BEC424855B6C00809B77 /* JFTEventSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JFTEventSearchViewController.swift; sourceTree = "<group>"; };
+		8965BEC624855C5B00809B77 /* JFTEventSearchEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JFTEventSearchEngine.swift; sourceTree = "<group>"; };
 		89679FEB2473D52B00B9171F /* JFTAEEventRepeatsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JFTAEEventRepeatsTableViewController.swift; sourceTree = "<group>"; };
 		89679FED2473D5C200B9171F /* JFTAEEventAlertTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JFTAEEventAlertTableViewController.swift; sourceTree = "<group>"; };
 		89679FF22473D69300B9171F /* JFTCalendarsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JFTCalendarsTableViewController.swift; sourceTree = "<group>"; };
@@ -118,6 +126,7 @@
 			children = (
 				890366DD24757D3A00737E89 /* JFTCalendarTableViewCell.swift */,
 				895D4D2C247CFC6500BA4D51 /* JFTShortCalendarTableViewCell.swift */,
+				8961EE952487AEBC00E68A1A /* JFTEventTableViewCell.swift */,
 			);
 			path = "Table Cells";
 			sourceTree = "<group>";
@@ -196,6 +205,7 @@
 				893B63112472BC9D00BF30E0 /* JFTEvent.swift */,
 				893B63132472BCB500BF30E0 /* JFTInfiniteScrollViewPresentationHandler.swift */,
 				893B63152472BD0D00BF30E0 /* JFTCalendar.swift */,
+				8965BEC624855C5B00809B77 /* JFTEventSearchEngine.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -219,6 +229,7 @@
 				893B632D2472C41300BF30E0 /* JFTYearViewController.swift */,
 				893B632F2472C54800BF30E0 /* JFTDayViewController.swift */,
 				895FA7452477DC430031A9BA /* JFTMonthViewController.swift */,
+				8965BEC424855B6C00809B77 /* JFTEventSearchViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -229,6 +240,7 @@
 				893B630F2472BC2600BF30E0 /* JFTPDatable.swift */,
 				895DA15C247AD5B50006E7F9 /* JFTAEEventDelegate.swift */,
 				8960B4F72483C1CD0066518D /* JFTJSONSerializable.swift */,
+				89585888248A54750087B28D /* JFTPRefreshable.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -335,8 +347,10 @@
 				893B630D2472BBBC00BF30E0 /* JFTDay.swift in Sources */,
 				890366DB24753B9F00737E89 /* JFTCheckCircle.swift in Sources */,
 				893B63092472BB8900BF30E0 /* JFTYear.swift in Sources */,
+				8961EE962487AEBC00E68A1A /* JFTEventTableViewCell.swift in Sources */,
 				893B632A2472C2B800BF30E0 /* JFTWeekView.swift in Sources */,
 				893B63022472BA3A00BF30E0 /* JFTYearView.swift in Sources */,
+				8965BEC724855C5B00809B77 /* JFTEventSearchEngine.swift in Sources */,
 				893B62EC2472AE8000BF30E0 /* AppDelegate.swift in Sources */,
 				89679FEE2473D5C200B9171F /* JFTAEEventAlertTableViewController.swift in Sources */,
 				893B631A2472BD5600BF30E0 /* UIViewExt.swift in Sources */,
@@ -358,8 +372,10 @@
 				895DA15D247AD5B50006E7F9 /* JFTAEEventDelegate.swift in Sources */,
 				893B63262472C26F00BF30E0 /* JFTWeekDaysTitlesView.swift in Sources */,
 				890366DE24757D3A00737E89 /* JFTCalendarTableViewCell.swift in Sources */,
+				8965BEC524855B6C00809B77 /* JFTEventSearchViewController.swift in Sources */,
 				896EBA672472DD130091A38A /* JFTAEEventMainTableViewController.swift in Sources */,
 				895FA744247795D40031A9BA /* JFTWeekLayoutView.swift in Sources */,
+				89585889248A54750087B28D /* JFTPRefreshable.swift in Sources */,
 				895DA15B247AC8030006E7F9 /* NSDateExt.swift in Sources */,
 				89679FF72473D73A00B9171F /* JFTColorCircle.swift in Sources */,
 				893B63182472BD2E00BF30E0 /* JFTUtilities.swift in Sources */,

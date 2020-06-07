@@ -17,6 +17,7 @@ class JFTWeekView: UIView, UIScrollViewDelegate
     private var infiniteScrollHandler: JFTInfiniteScrollViewPresentationHandler?
     private static let xibName: String = "JFTWeekView"
     private static let formatter: DateFormatter = DateFormatter()
+    private var finishedLoading: Bool = false
     
     override init(frame: CGRect)
     {
@@ -39,9 +40,10 @@ class JFTWeekView: UIView, UIScrollViewDelegate
         WeekLayoutScrollView.delegate = self
         WeekLayoutScrollView.isPagingEnabled = true
         infiniteScrollHandler = JFTInfiniteScrollViewPresentationHandler(scrollViewToReference: WeekLayoutScrollView, type: .JFTWeekViewType)
+        finishedLoading = true
     }
     
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool)
+    func scrollViewDidScroll(_ scrollView: UIScrollView)
     {
         let translation = scrollView.panGestureRecognizer.translation(in: scrollView.superview)
         if scrollView.isDragging
@@ -57,14 +59,26 @@ class JFTWeekView: UIView, UIScrollViewDelegate
         }
     }
     
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView)
+    {
+        if finishedLoading
+        {
+            infiniteScrollHandler!.OnFinishedScrollingForWeekView()
+        }
+    }
+    
     func OnNewSelectedDay()
     {
+        
         SelectedDateLable.text = JFTWeekView.formatter.string(from: (JFTDayViewController.CurrentReference!.selectedDay.GetDate()))
     }
     
     func LoadWithSelectedDate(selected date: Date)
     {
         infiniteScrollHandler = JFTInfiniteScrollViewPresentationHandler(scrollViewToReference: WeekLayoutScrollView, type: .JFTWeekViewType, selected: date)
+        JFTWeekLayoutView.SetWeekdayForDate(date: date)
+        let firstViewReference = WeekLayoutScrollView.subviews[0] as! JFTWeekLayoutView
+        firstViewReference.HighlightSelectedDay()
     }
     
     func OnSetTodayTouch()
@@ -75,9 +89,19 @@ class JFTWeekView: UIView, UIScrollViewDelegate
             {
                 infiniteScrollHandler!.OnMoveToTodayRequest()
                 OnNewSelectedDay()
-                let todaysWeekday = Calendar.current.component(.weekday, from: Date())
                 let firstViewReference = WeekLayoutScrollView.subviews[0] as! JFTWeekLayoutView
-                firstViewReference.HighlightSelectedDay(weekday: todaysWeekday)
+                firstViewReference.SetWeekdayForToday()
+                firstViewReference.HighlightSelectedDay()
+                JFTDayViewController.CurrentReference!.SelectDay(selected: JFTDay(date: Date()))
+            }
+            else if !(JFTDayViewController.CurrentReference!.selectedDay == JFTDay(date: Date()))
+            {
+                infiniteScrollHandler!.OnMoveToTodayRequest()
+                OnNewSelectedDay()
+                let firstViewReference = WeekLayoutScrollView.subviews[0] as! JFTWeekLayoutView
+                firstViewReference.SetWeekdayForToday()
+                firstViewReference.HighlightSelectedDay()
+                JFTDayViewController.CurrentReference!.SelectDay(selected: JFTDay(date: Date()))
             }
             
         }
@@ -85,6 +109,7 @@ class JFTWeekView: UIView, UIScrollViewDelegate
         {
             infiniteScrollHandler = JFTInfiniteScrollViewPresentationHandler(scrollViewToReference: WeekLayoutScrollView, type: .JFTWeekViewType)
             self.view.setNeedsDisplay()
+            OnSetTodayTouch()
         }
     }
 }

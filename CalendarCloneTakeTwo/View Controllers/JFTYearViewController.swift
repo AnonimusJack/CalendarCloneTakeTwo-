@@ -59,22 +59,6 @@ class JFTYearViewController: UIViewController, UIScrollViewDelegate
         }
     }
     
-//    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool)
-//    {
-//        let translation = scrollView.panGestureRecognizer.translation(in: scrollView.superview)
-//        if scrollView.isDragging
-//        {
-//            if translation.y > 0
-//            {
-//                infiniteScrollHandler!.OnScrollUpwards()
-//            }
-//            else if translation.y < 0
-//            {
-//                infiniteScrollHandler!.OnScrollDownwards()
-//            }
-//        }
-//    }
-    
     func OnMonthSelected(selected date: Date)
     {
         performSegue(withIdentifier: "openMonthsView", sender: date)

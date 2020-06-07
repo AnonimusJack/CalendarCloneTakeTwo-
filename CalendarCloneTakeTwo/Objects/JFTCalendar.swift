@@ -10,36 +10,6 @@ import UIKit
 
 class JFTCalendar: JFTJSONSerializable
 {
-    func Serialize() -> Dictionary<String, Any>
-    {
-        var jsonDictionary = Dictionary<String,Any>()
-        jsonDictionary.updateValue(Name, forKey: "Name")
-        var eventsArrayJSONs: [Dictionary<String,Any>] = []
-        for event in Events
-        {
-            eventsArrayJSONs.append(event.Serialize())
-        }
-        jsonDictionary.updateValue(eventsArrayJSONs, forKey: "Events")
-        jsonDictionary.updateValue(ColorCode.Name!, forKey: "ColorCode")
-        jsonDictionary.updateValue(IsVisible, forKey: "IsVisible")
-        return jsonDictionary
-    }
-    
-    func Deserialize(json: Dictionary<String, Any>)
-    {
-        Name = json["Name"] as! String
-        Events = []
-        for eventJSON in json["Events"] as! [Dictionary<String,Any>]
-        {
-            let event = JFTEvent()
-            event.Deserialize(json: eventJSON)
-            Events.append(event)
-        }
-        ColorCode = UIColor.ColorByName(name: json["ColorCode"] as! String)
-        IsVisible = json["IsVisible"] as! Bool
-    }
-    
-    
     static var LocalCalendars: [JFTCalendar] = []
     var Name: String = ""
     var Events: [JFTEvent] = []
@@ -48,19 +18,6 @@ class JFTCalendar: JFTJSONSerializable
     
     required init() {}
     
-//    func encode(with coder: NSCoder)
-//    {
-//        coder.encode(Name, forKey: "Name")
-//        coder.encode(Events, forKey: "Events")
-//        coder.encode(ColorCode, forKey: "ColorCode")
-//    }
-//
-//    required init?(coder: NSCoder)
-//    {
-//        Name = coder.decodeObject(forKey: "Name") as! String
-//        Events = coder.decodeObject(forKey: "Events") as! [JFTEvent]
-//        ColorCode = coder.decodeObject(forKey: "ColorCode") as! UIColor
-//    }
     
     func CheckIfDateIsFree(date: Date) -> Bool
     {
@@ -104,6 +61,37 @@ class JFTCalendar: JFTJSONSerializable
             Events.remove(at: index)
         }
     }
+    
+    func Serialize() -> Dictionary<String, Any>
+    {
+        var jsonDictionary = Dictionary<String,Any>()
+        jsonDictionary.updateValue(Name, forKey: "Name")
+        var eventsArrayJSONs: [Dictionary<String,Any>] = []
+        for event in Events
+        {
+            eventsArrayJSONs.append(event.Serialize())
+        }
+        jsonDictionary.updateValue(eventsArrayJSONs, forKey: "Events")
+        jsonDictionary.updateValue(ColorCode.Name!, forKey: "ColorCode")
+        jsonDictionary.updateValue(IsVisible, forKey: "IsVisible")
+        return jsonDictionary
+    }
+    
+    func Deserialize(json: Dictionary<String, Any>)
+    {
+        Name = json["Name"] as! String
+        Events = []
+        for eventJSON in json["Events"] as! [Dictionary<String,Any>]
+        {
+            let event = JFTEvent()
+            event.Deserialize(json: eventJSON)
+            Events.append(event)
+        }
+        ColorCode = UIColor.ColorByName(name: json["ColorCode"] as! String)
+        IsVisible = json["IsVisible"] as! Bool
+    }
+    
+    
     
     static func LoadLocalCalendars()
     {
@@ -151,5 +139,44 @@ class JFTCalendar: JFTJSONSerializable
             }
         }
         return dates
+    }
+    
+    static func CalendarForEventWith(id: String) -> JFTCalendar?
+    {
+        for calendar in JFTCalendar.LocalCalendars
+        {
+            for event in calendar.Events
+            {
+                if event.ID == id
+                {
+                    return calendar
+                }
+            }
+        }
+        return nil
+    }
+    
+    static func ColorForEventWith(id: String) -> UIColor
+    {
+        if let calendar = JFTCalendar.CalendarForEventWith(id: id)
+        {
+            return calendar.ColorCode
+        }
+        return UIColor.black
+    }
+    
+    static func EventWith(id: String) -> JFTEvent?
+    {
+        for calendar in JFTCalendar.LocalCalendars
+        {
+            for event in calendar.Events
+            {
+                if event.ID == id
+                {
+                    return event
+                }
+            }
+        }
+        return nil
     }
 }

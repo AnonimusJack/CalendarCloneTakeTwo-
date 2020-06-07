@@ -9,34 +9,7 @@ import UIKit
 
 class JFTEvent: JFTJSONSerializable
 {
-    private static let jsonDateFormatter = DateFormatter()
-    
-    func Serialize() -> Dictionary<String, Any>
-    {
-        var jsonDictionary = Dictionary<String,Any>()
-        jsonDictionary.updateValue(ID, forKey: "ID")
-        jsonDictionary.updateValue(Title, forKey: "Title")
-        jsonDictionary.updateValue(Location, forKey: "Location")
-        jsonDictionary.updateValue(IsAllDay, forKey: "IsAllDay")
-        jsonDictionary.updateValue(JFTEvent.jsonDateFormatter.string(from: StartTime), forKey: "StartTime")
-        jsonDictionary.updateValue(JFTEvent.jsonDateFormatter.string(from: EndTime), forKey: "EndTime")
-        jsonDictionary.updateValue(Repeats, forKey: "Repeats")
-        jsonDictionary.updateValue(URL, forKey: "URL")
-        jsonDictionary.updateValue(Notes, forKey: "Notes")
-        return jsonDictionary
-    }
-    
-    func Deserialize(json: Dictionary<String, Any>)
-    {
-        ID = json["ID"] as! String
-        Title = json["Title"] as! String
-        Location = json["Location"] as! String
-        StartTime = JFTEvent.jsonDateFormatter.date(from: json["StartTime"] as! String)!
-        EndTime = JFTEvent.jsonDateFormatter.date(from: json["EndTime"] as! String)!
-        URL = json["URL"] as! String
-        Notes = json["Notes"] as! String
-    }
-    
+    static let JSONDateFormatter = DateFormatter()
     static var WorkingEventHolder: JFTEvent = JFTEvent()
     var ID: String
     var Title: String
@@ -96,10 +69,36 @@ class JFTEvent: JFTJSONSerializable
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [ID])
     }
     
-    func CreateID(title: String, date: Date) -> String
+    func GenerateID()
     {
-        let startDateComponenets = Calendar.current.dateComponents([.year, .month, .day], from: date)
-        return "\(title)\(startDateComponenets.year!)\(startDateComponenets.month!)\(startDateComponenets.day!)"
+        let startDateComponenets = Calendar.current.dateComponents([.year, .month, .day], from: StartTime)
+        ID = "\(Title)\(startDateComponenets.year!)\(startDateComponenets.month!)\(startDateComponenets.day!)"
+    }
+    
+    func Serialize() -> Dictionary<String, Any>
+    {
+        var jsonDictionary = Dictionary<String,Any>()
+        jsonDictionary.updateValue(ID, forKey: "ID")
+        jsonDictionary.updateValue(Title, forKey: "Title")
+        jsonDictionary.updateValue(Location, forKey: "Location")
+        jsonDictionary.updateValue(IsAllDay, forKey: "IsAllDay")
+        jsonDictionary.updateValue(JFTEvent.JSONDateFormatter.string(from: StartTime), forKey: "StartTime")
+        jsonDictionary.updateValue(JFTEvent.JSONDateFormatter.string(from: EndTime), forKey: "EndTime")
+        jsonDictionary.updateValue(Repeats, forKey: "Repeats")
+        jsonDictionary.updateValue(URL, forKey: "URL")
+        jsonDictionary.updateValue(Notes, forKey: "Notes")
+        return jsonDictionary
+    }
+    
+    func Deserialize(json: Dictionary<String, Any>)
+    {
+        ID = json["ID"] as! String
+        Title = json["Title"] as! String
+        Location = json["Location"] as! String
+        StartTime = JFTEvent.JSONDateFormatter.date(from: json["StartTime"] as! String)!
+        EndTime = JFTEvent.JSONDateFormatter.date(from: json["EndTime"] as! String)!
+        URL = json["URL"] as! String
+        Notes = json["Notes"] as! String
     }
     
     static func UpdateComponentsForRepeatingNotification(for event: JFTEvent, type: JFTRepeatType, start date: Date)
@@ -126,6 +125,6 @@ class JFTEvent: JFTJSONSerializable
     
     static func SetFormatterFormat()
     {
-        JFTEvent.jsonDateFormatter.dateFormat = "MMM dd,yyyy HH:mm"
+        JFTEvent.JSONDateFormatter.dateFormat = "MMM dd,yyyy HH:mm"
     }
 }

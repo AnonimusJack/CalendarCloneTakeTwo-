@@ -8,7 +8,7 @@
 
 import UIKit
 
-class JFTMonthViewController: UIViewController, UIScrollViewDelegate
+class JFTMonthViewController: UIViewController, UIScrollViewDelegate, JFTPRefreshable
 {
     static var CurrentReference: JFTMonthViewController?
     @IBOutlet weak var monthScrollView: UIScrollView!
@@ -28,9 +28,11 @@ class JFTMonthViewController: UIViewController, UIScrollViewDelegate
     {
         super.viewWillAppear(animated)
         JFTMonthViewController.CurrentReference = self
+        infiniteScrollHandler = JFTInfiniteScrollViewPresentationHandler(scrollViewToReference: monthScrollView, type: .JFTMonthViewType, selected: selectedDate)
+        buildToolbarForYearViewController()
     }
     
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool)
+    func scrollViewDidScroll(_ scrollView: UIScrollView)
     {
         let translation = scrollView.panGestureRecognizer.translation(in: scrollView.superview)
         if scrollView.isDragging
@@ -45,7 +47,7 @@ class JFTMonthViewController: UIViewController, UIScrollViewDelegate
             }
         }
     }
-    
+        
     override func viewWillDisappear(_ animated: Bool)
     {
         super.viewWillDisappear(animated)
@@ -105,5 +107,10 @@ class JFTMonthViewController: UIViewController, UIScrollViewDelegate
     @objc private func onCalendarTap()
     {
         performSegue(withIdentifier: "openCalendar", sender: self)
+    }
+    
+    func SetRefreshEvent()
+    {
+        self.loadView()
     }
 }

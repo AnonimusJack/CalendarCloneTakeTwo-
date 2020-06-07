@@ -8,10 +8,12 @@
 
 import UIKit
 
-class JFTDayViewController: UIViewController
+class JFTDayViewController: UIViewController, JFTPRefreshable
 {
     static var CurrentReference: JFTDayViewController?
     private var isToday: Bool = true
+    private var selectedEventID: String = ""
+    private var isRefreshPending: Bool = false
     @IBOutlet weak var weekLayoutView: UIView!
     @IBOutlet weak var hoursLayoutView: UIScrollView!
     var selectedDay: JFTDay = JFTDay(date: Date())
@@ -34,8 +36,13 @@ class JFTDayViewController: UIViewController
         {
             let castWeekLayoutView = weekLayoutView as! JFTWeekView
             castWeekLayoutView.LoadWithSelectedDate(selected: selectedDay.GetDate())
+            SelectDay(selected: selectedDay)
         }
-        viewInitialization()
+        else
+        {
+            viewInitialization()
+        }
+        hoursLayoutView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(onDayLayoutViewLongPress)))
     }
     
     override func viewWillDisappear(_ animated: Bool)
@@ -47,8 +54,8 @@ class JFTDayViewController: UIViewController
     func SelectDay(selected day: JFTDay)
     {
         selectedDay = day
-        let castWeekLayoutView = weekLayoutView as! JFTWeekView
-        castWeekLayoutView.OnNewSelectedDay()
+        let castWeekView = weekLayoutView as! JFTWeekView
+        castWeekView.OnNewSelectedDay()
         viewInitialization()
     }
     
@@ -56,6 +63,31 @@ class JFTDayViewController: UIViewController
     {
         selectedDay = JFTDay(date: date)
         isToday = false
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+        let destinationNavVC = segue.destination as! UINavigationController
+        let castDestination = destinationNavVC.viewControllers.first as! JFTAEEventMainTableViewController
+        if segue.identifier == "editEvent"
+        {
+            castDestination.IsEdit = true
+            JFTEvent.WorkingEventHolder = JFTCalendar.EventWith(id: selectedEventID)!
+        }
+        else if segue.identifier == "specialAdd"
+        {
+            let castSender = sender as! Date
+            castDestination.OnSpecialAddWith(date: castSender)
+        }
+    }
+    
+    @objc private func onDayLayoutViewLongPress(sender: UILongPressGestureRecognizer)
+    {
+        if sender.state == .ended
+        {
+            let eventStartDate = calculateStartDateForPosition(position: sender.location(in: sender.view!).y)
+            performSegue(withIdentifier: "specialAdd", sender: eventStartDate)
+        }
     }
     
     private func viewInitialization()
@@ -91,6 +123,8 @@ class JFTDayViewController: UIViewController
                     {
                         let newEventView = JFTEventView(frame: CGRect(x: 0.0, y: 0.0, width: 325.0, height: 100.0))
                         newEventView.ActivateWith(event: event, and: calendar)
+                        newEventView.EventID = event.ID
+                        newEventView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onEventViewTouch)))
                         hoursLayoutView.addSubview(newEventView)
                         addHourLabelsFor(startTime: event.StartTime, endTime: event.EndTime, calendarColor: calendar.ColorCode)
                         self.view.setNeedsDisplay()
@@ -98,6 +132,13 @@ class JFTDayViewController: UIViewController
                 }
             }
         }
+    }
+    
+    @objc private func onEventViewTouch(sender: UITapGestureRecognizer)
+    {
+        let selectedView = sender.view as! JFTEventView
+        selectedEventID = selectedView.EventID
+        performSegue(withIdentifier: "editEvent", sender: self)
     }
     
     private func initializeHoursLayoutView()
@@ -156,11 +197,22 @@ class JFTDayViewController: UIViewController
     private func calculateYPositionForLabel(hour: Int, minute: Int) -> Double
     {
         let minuteDouble = Double(minute) / 60.0 * 100.0
-        let minuteString = (minuteDouble < 10.0) ? "0\(minute)" : "\(minute)"
+        let minuteString = (minuteDouble < 10.0) ? "0\(minuteDouble)" : "\(minuteDouble)"
         let timeAsDouble = Double(String("\(hour)"+minuteString))!
         return timeAsDouble
     }
     
+    private func calculateStartDateForPosition(position: CGFloat) -> Date
+    {
+        var addedEventDateComponenets = Calendar.current.dateComponents([.year, .month, .day], from: selectedDay.GetDate())
+        let positionString = String(Double(position))
+        let hours = (position >= 1000) ? Int(positionString.prefix(2))! : Int(positionString.prefix(1))!
+        let precalculatedMinutesValue = (position >= 1000) ? Double(positionString.suffix(positionString.count - 2))! : Double(positionString.suffix(positionString.count - 1))!
+        let minutes = Int(precalculatedMinutesValue / 100.0 * 60.0)
+        addedEventDateComponenets.hour = hours
+        addedEventDateComponenets.minute = minutes
+        return Calendar.current.date(from: addedEventDateComponenets)!
+    }
     
     private func buildToolbarForYearViewController()
     {
@@ -182,6 +234,12 @@ class JFTDayViewController: UIViewController
     @objc private func onCalendarTap()
     {
         performSegue(withIdentifier: "openCalendar", sender: self)
+    }
+    
+    func SetRefreshEvent()
+    {
+        self.loadView()
+        self.viewWillAppear(false)
     }
 }
 

@@ -21,6 +21,7 @@ class JFTAEEventMainTableViewController: UITableViewController, UITextFieldDeleg
     private var selectedCalendarReference: JFTCalendar = JFTCalendar.LocalCalendars[0]
     private var isStartDateSelected: Bool = false
     private var isEndDateSelected: Bool = false
+    private var specialAddDate: Date = Date()
     @IBOutlet weak var TitleTF: UITextField!
     @IBOutlet weak var LocationTF: UITextField!
     @IBOutlet weak var IsEntireDaySwitch: UISwitch!
@@ -38,18 +39,22 @@ class JFTAEEventMainTableViewController: UITableViewController, UITextFieldDeleg
     override func loadView()
     {
         super.loadView()
+        JFTAEEventMainTableViewController.formatter.dateFormat = "MMM dd,yyyy HH:mm"
+        if IsEdit
+        {
+            buildToolbarForEditEventViewController()
+            initForEditting()
+        }
+        else
+        {
+            initializeDatesForPickersAndLabels(date: specialAddDate)
+        }
         TitleTF.delegate = self
         LocationTF.delegate = self
         URLTF.delegate = self
         NotesTV.delegate = self
         CalendarNameLabel.text = selectedCalendarReference.Name
-        JFTAEEventMainTableViewController.formatter.dateFormat = "MMM dd,yyyy HH:mm"
-        initializeDatesForPickersAndLabels()
         initializeNavigationBar()
-        if IsEdit
-        {
-            buildToolbarForEditEventViewController()
-        }
     }
     
     override func viewDidLoad()
@@ -113,6 +118,19 @@ class JFTAEEventMainTableViewController: UITableViewController, UITextFieldDeleg
         }
     }
     
+    override func viewWillDisappear(_ animated: Bool)
+    {
+        super.viewWillAppear(animated)
+        if let dayViewController = JFTDayViewController.CurrentReference
+        {
+            dayViewController.SetRefreshEvent()
+        }
+        if let monthViewController = JFTMonthViewController.CurrentReference
+        {
+            monthViewController.SetRefreshEvent()
+        }
+    }
+    
     @IBAction func OnStartDatePick(_ sender: UIDatePicker)
     {
         StartDateLabel.text = JFTAEEventMainTableViewController.formatter.string(from: sender.date)
@@ -149,6 +167,12 @@ class JFTAEEventMainTableViewController: UITableViewController, UITextFieldDeleg
         JFTEvent.WorkingEventHolder.IsAllDay = sender.isOn
     }
     
+    func OnSpecialAddWith(date: Date)
+    {
+        specialAddDate = date
+        JFTEvent.WorkingEventHolder.StartTime = date
+    }
+    
     private func initializeNavigationBar()
     {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(self.cancelButtonTouch))
@@ -157,18 +181,23 @@ class JFTAEEventMainTableViewController: UITableViewController, UITextFieldDeleg
     
     private func buildToolbarForEditEventViewController()
     {
-        let deleteButton = UIBarButtonItem(title: "Today", style: .plain, target: self, action: #selector(deleteButtonTouch))
+        self.navigationController!.isToolbarHidden = false
+        let deleteButton = UIBarButtonItem(title: "Delete", style: .plain, target: self, action: #selector(deleteButtonTouch))
         let toolbarButtons = [deleteButton]
         setToolbarItems(toolbarButtons, animated: true)
     }
     
     @objc private func deleteButtonTouch()
     {
-        
+        selectedCalendarReference.DeleteEvent(eventToDelete: JFTEvent.WorkingEventHolder)
+        JFTEvent.WorkingEventHolder = JFTEvent()
+        JFTCalendar.SaveLocalCalendars()
+        cancelButtonTouch()
     }
     
     @objc private func cancelButtonTouch()
     {
+        JFTEvent.WorkingEventHolder = JFTEvent()
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -176,6 +205,10 @@ class JFTAEEventMainTableViewController: UITableViewController, UITextFieldDeleg
     {
         if IsEdit
         {
+            if JFTEvent.WorkingEventHolder.NotificationDate != DateComponents()
+            {
+                JFTEvent.WorkingEventHolder.AddNotification()
+            }
             JFTCalendar.SaveLocalCalendars()
             JFTEvent.WorkingEventHolder = JFTEvent()
             cancelButtonTouch()
@@ -184,7 +217,13 @@ class JFTAEEventMainTableViewController: UITableViewController, UITextFieldDeleg
         {
             if checkIfRequiredFieldsAreSet()
             {
+                JFTEvent.WorkingEventHolder.GenerateID()
+                print(JFTEvent.WorkingEventHolder.ID)
                 selectedCalendarReference.Events.append(JFTEvent(copy: JFTEvent.WorkingEventHolder))
+                if JFTEvent.WorkingEventHolder.NotificationDate != DateComponents()
+                {
+                    JFTEvent.WorkingEventHolder.AddNotification()
+                }
                 JFTCalendar.SaveLocalCalendars()
                 JFTEvent.WorkingEventHolder = JFTEvent()
                 cancelButtonTouch()
@@ -205,9 +244,9 @@ class JFTAEEventMainTableViewController: UITableViewController, UITextFieldDeleg
         return false
     }
     
-    private func initializeDatesForPickersAndLabels()
+    private func initializeDatesForPickersAndLabels(date: Date = Date())
     {
-        StartDateDP.date = Date()
+        StartDateDP.date = date
         StartDateLabel.text = JFTAEEventMainTableViewController.formatter.string(from: StartDateDP.date)
         JFTEvent.WorkingEventHolder.StartTime = StartDateDP.date
         adjustEndAutomaticlyByAnHour()
@@ -218,6 +257,19 @@ class JFTAEEventMainTableViewController: UITableViewController, UITextFieldDeleg
         EndDateDP.date = Calendar.current.date(byAdding: DateComponents(hour: 1), to: StartDateDP.date)!
         EndDateLabel.text = JFTAEEventMainTableViewController.formatter.string(from: EndDateDP.date)
         JFTEvent.WorkingEventHolder.EndTime = EndDateDP.date
+    }
+    
+    private func initForEditting()
+    {
+        TitleTF.text = JFTEvent.WorkingEventHolder.Title
+        LocationTF.text = JFTEvent.WorkingEventHolder.Location
+        StartDateDP.date = JFTEvent.WorkingEventHolder.StartTime
+        StartDateLabel.text = JFTAEEventMainTableViewController.formatter.string(from: StartDateDP.date)
+        EndDateDP.date = JFTEvent.WorkingEventHolder.EndTime
+        EndDateLabel.text = JFTAEEventMainTableViewController.formatter.string(from: EndDateDP.date)
+        NotesTV.text = JFTEvent.WorkingEventHolder.Notes
+        URLTF.text = JFTEvent.WorkingEventHolder.URL
+        selectedCalendarReference = JFTCalendar.CalendarForEventWith(id: JFTEvent.WorkingEventHolder.ID)!
     }
     
     func RaiseStringValueChanged(string: String, type: JFTChangedLableType)

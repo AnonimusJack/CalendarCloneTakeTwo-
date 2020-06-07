@@ -61,7 +61,8 @@ class JFTInfiniteScrollViewPresentationHandler
     
     func OnScrollDownwards()
     {
-        if callerScrollViewReference!.contentOffset.y >= (callerScrollViewReference!.contentSize.height - viewHeight)
+        let viewHeightCorrected = (currentViewType == .JFTMonthViewType) ? (viewHeight * 2) : viewHeight
+        if callerScrollViewReference!.contentOffset.y >= (callerScrollViewReference!.contentSize.height - viewHeightCorrected)
         {
             if finishedAddingView
             {
@@ -77,10 +78,12 @@ class JFTInfiniteScrollViewPresentationHandler
         {
             if finishedAddingView
             {
-                resetContentOffset(ascending: false)
                 addViewToTheBottom()
+                resetContentOffset(ascending: false)
             }
         }
+        cleanupForScrollEventForWeekView()
+        scrolledEventForWeekView(right: true)
     }
     
     func OnScrollLeft()
@@ -93,6 +96,14 @@ class JFTInfiniteScrollViewPresentationHandler
                 resetContentOffset(ascending: true)
             }
         }
+        cleanupForScrollEventForWeekView()
+        scrolledEventForWeekView(right: false)
+    }
+    
+    func OnFinishedScrollingForWeekView()
+    {
+        cleanupForScrollEventForWeekView()
+        scrolledEventForWeekView(right: false)
     }
     
     func OnMoveToTodayRequest()
@@ -160,7 +171,7 @@ class JFTInfiniteScrollViewPresentationHandler
                 dateComponentToAdd = DateComponents(month: next ? 1 : -1)
                 break
             case .JFTWeekViewType:
-                dateComponentToAdd = DateComponents(day: next ? -7 : 7)
+                dateComponentToAdd = DateComponents(weekOfMonth: next ? -1 : 1)
                 break
         }
         if ascending
@@ -312,6 +323,7 @@ class JFTInfiniteScrollViewPresentationHandler
         descendingViewsArray.append(descendingView)
         callerScrollViewReference!.addSubview(descendingView)
         recalculateScrollViewContentSize()
+        callerScrollViewReference!.contentOffset = CGPoint(x: 0.0, y: 0.0)
         resetInitialPosition()
     }
     
@@ -363,6 +375,11 @@ class JFTInfiniteScrollViewPresentationHandler
                 let centerX = callerScrollViewReference!.contentOffset.x + viewWidth
                 callerScrollViewReference!.setContentOffset(CGPoint(x: centerX, y: 0.0), animated: false)
             }
+            else
+            {
+                let centerX = callerScrollViewReference!.contentOffset.x - viewWidth
+                callerScrollViewReference!.setContentOffset(CGPoint(x: centerX, y: 0.0), animated: false)
+            }
         }
     }
     
@@ -384,5 +401,29 @@ class JFTInfiniteScrollViewPresentationHandler
         {
             view.removeFromSuperview()
         }
+    }
+    
+    private func viewAtOffset() -> UIView
+    {
+        let offsetPosition = callerScrollViewReference!.contentOffset
+        for view in callerScrollViewReference!.subviews
+        {
+            if view.frame.contains(offsetPosition)
+            {
+                return view
+            }
+        }
+        return callerScrollViewReference!.subviews[0]
+    }
+    
+    private func scrolledEventForWeekView(right direction: Bool)
+    {
+        let selectedView = viewAtOffset() as! JFTWeekLayoutView
+        selectedView.HighlightSelectedDay()
+    }
+    
+    private func cleanupForScrollEventForWeekView()
+    {
+        JFTWeekLayoutView.CleanHighlightFromViews(views: callerScrollViewReference!.subviews as! [JFTWeekLayoutView])
     }
 }

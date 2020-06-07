@@ -126,16 +126,8 @@ import UIKit
     {
         if self.bounds.height < 80
         {
-            if dayObject.DayOfTheMonth > 9
-            {
-                let fontSizeRatio: CGFloat = (self.bounds.height > 20) ? 1/3 : 1/6
-                CurrentDayDateLable.font = CurrentDayDateLable.font.withSize(CurrentDayDateLable.frame.height * fontSizeRatio)
-            }
-            else
-            {
-                let fontSizeRatio: CGFloat = (self.bounds.height > 20) ? 2/3 : 1/3
-                CurrentDayDateLable.font = CurrentDayDateLable.font.withSize(CurrentDayDateLable.frame.height * fontSizeRatio)
-            }
+            let fontSizeRatio: CGFloat = (self.bounds.height > 20) ? 1/3 : 1/5
+            CurrentDayDateLable.font = CurrentDayDateLable.font.withSize(CurrentDayDateLable.frame.height * fontSizeRatio)
         }
     }
     
