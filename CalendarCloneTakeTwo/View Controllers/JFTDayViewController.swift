@@ -67,15 +67,17 @@ class JFTDayViewController: UIViewController, JFTPRefreshable
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
-        let destinationNavVC = segue.destination as! UINavigationController
-        let castDestination = destinationNavVC.viewControllers.first as! JFTAEEventMainTableViewController
         if segue.identifier == "editEvent"
         {
+            let destinationNavVC = segue.destination as! UINavigationController
+            let castDestination = destinationNavVC.viewControllers.first as! JFTAEEventMainTableViewController
             castDestination.IsEdit = true
             JFTEvent.WorkingEventHolder = JFTCalendar.EventWith(id: selectedEventID)!
         }
         else if segue.identifier == "specialAdd"
         {
+            let destinationNavVC = segue.destination as! UINavigationController
+            let castDestination = destinationNavVC.viewControllers.first as! JFTAEEventMainTableViewController
             let castSender = sender as! Date
             castDestination.OnSpecialAddWith(date: castSender)
         }

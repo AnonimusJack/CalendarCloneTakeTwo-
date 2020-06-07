@@ -8,23 +8,37 @@
 
 import UIKit
 
-class JFTAECalendarTableViewController: UITableViewController
+class JFTAECalendarTableViewController: UITableViewController, UITextFieldDelegate
 {
     @IBOutlet weak var NameTextField: UITextField!
     var IsEdit: Bool = false
     var Calendar: JFTCalendar = JFTCalendar()
+    var ParentReference: JFTPRefreshable?
     private var colorsArray: [UIColor] = [UIColor.red, UIColor.orange, UIColor.yellow, UIColor.green, UIColor.blue, UIColor.purple, UIColor.brown]
     
     override func loadView()
     {
         super.loadView()
         initializeNavigationBar()
+        NameTextField.delegate = self
         NameTextField.text = self.Calendar.Name
     }
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool)
+    {
+        super.viewWillDisappear(animated)
+        ParentReference!.SetRefreshEvent()
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool
+    {
+        self.view.endEditing(true)
+        return false
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?

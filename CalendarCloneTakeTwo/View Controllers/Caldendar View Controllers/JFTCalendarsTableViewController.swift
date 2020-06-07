@@ -8,7 +8,7 @@
 
 import UIKit
 
-class JFTCalendarsTableViewController: UITableViewController
+class JFTCalendarsTableViewController: UITableViewController, JFTPRefreshable
 {
     private var hideShowBarButton: UIBarButtonItem?
     
@@ -19,12 +19,26 @@ class JFTCalendarsTableViewController: UITableViewController
         initializeNavigationBar()
     }
     
+    override func viewWillDisappear(_ animated: Bool)
+    {
+        super.viewWillAppear(animated)
+        if let dayViewController = JFTDayViewController.CurrentReference
+        {
+            dayViewController.SetRefreshEvent()
+        }
+        if let monthViewController = JFTMonthViewController.CurrentReference
+        {
+            monthViewController.SetRefreshEvent()
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let calendarRef = JFTCalendar.LocalCalendars[indexPath.row]
         let newCell: JFTCalendarTableViewCell = tableView.dequeueReusableCell(withIdentifier: "JFTCalendarTableCell") as! JFTCalendarTableViewCell
         newCell.CalendarReference = calendarRef
         newCell.CalendarCheckCircle.CircleColor = calendarRef.ColorCode
+        newCell.CalendarCheckCircle.setNeedsDisplay()
         newCell.CalendarNameLabel.text = calendarRef.Name
         return newCell
     }
@@ -41,14 +55,13 @@ class JFTCalendarsTableViewController: UITableViewController
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
+        let destinationNavController = segue.destination as? UINavigationController
+        let editCalendarTableView = destinationNavController!.viewControllers.first as! JFTAECalendarTableViewController
+        editCalendarTableView.ParentReference = self
         if segue.identifier == "editCalendar"
         {
-            let destinationNavController = segue.destination as? UINavigationController
-            if let editCalendarTableView = destinationNavController!.viewControllers.first as? JFTAECalendarTableViewController
-            {
-                editCalendarTableView.IsEdit = true
-                editCalendarTableView.Calendar = sender as! JFTCalendar
-            }
+            editCalendarTableView.IsEdit = true
+            editCalendarTableView.Calendar = sender as! JFTCalendar
         }
     }
     
@@ -89,5 +102,12 @@ class JFTCalendarsTableViewController: UITableViewController
     @objc private func onDoneButtonTouch()
     {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    func SetRefreshEvent()
+    {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
 }

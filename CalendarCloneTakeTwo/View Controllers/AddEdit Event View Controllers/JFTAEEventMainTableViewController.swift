@@ -62,6 +62,12 @@ class JFTAEEventMainTableViewController: UITableViewController, UITextFieldDeleg
         super.viewDidLoad()
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool
+    {
+        self.view.endEditing(true)
+        return false
+    }
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
         if indexPath.section == 1
