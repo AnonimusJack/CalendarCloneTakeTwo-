@@ -10,5 +10,6 @@ import Foundation
 
 protocol JFTPDatable
 {
+    ///Returns the Date of said Component
     func GetDate() -> Date
 }

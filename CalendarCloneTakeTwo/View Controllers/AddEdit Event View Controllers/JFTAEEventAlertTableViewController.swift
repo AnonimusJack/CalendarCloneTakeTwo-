@@ -10,11 +10,11 @@ import UIKit
 
 class JFTAEEventAlertTableViewController: UITableViewController
 {
-    weak var parentDelegate: JFTAEEventDelegate?
-    private var earlyDateHolder: Date = JFTEvent.WorkingEventHolder.StartTime
     private static var selectedRow: IndexPath = IndexPath(row: 0, section: 0)
+    private var earlyDateHolder: Date = JFTEvent.WorkingEventHolder.StartTime
     private var selectedAlertType: JFTAlertType = .None
     private var selectedValue: Int = 0
+    weak var parentDelegate: JFTAEEventDelegate?
     
     enum JFTAlertType: String
     {
@@ -25,6 +25,9 @@ class JFTAEEventAlertTableViewController: UITableViewController
         case Days
         case Weeks
     }
+    
+    
+    // MARK: View Controller Events
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -32,6 +35,8 @@ class JFTAEEventAlertTableViewController: UITableViewController
         tableView(tableView, didSelectRowAt: JFTAEEventAlertTableViewController.selectedRow)
     }
     
+    
+    // MARK: Table View Events
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
         tableView.RemoveAllCheckmarks()
@@ -41,6 +46,8 @@ class JFTAEEventAlertTableViewController: UITableViewController
         parentDelegate!.RaiseStringValueChanged(string: tableView.cellForRow(at: indexPath)!.textLabel!.text!, type: .Alert)
     }
     
+    
+    // MARK: Helper Methods
     private func selectAlertTypeFor(indexPath: IndexPath)
     {
         if indexPath.section == 0

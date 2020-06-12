@@ -10,11 +10,13 @@ import UIKit
 
 class JFTMonthViewController: UIViewController, UIScrollViewDelegate, JFTPRefreshable
 {
-    static var CurrentReference: JFTMonthViewController?
-    @IBOutlet weak var monthScrollView: UIScrollView!
     private var infiniteScrollHandler: JFTInfiniteScrollViewPresentationHandler?
     private var selectedDate: Date = Date()
+    static var CurrentReference: JFTMonthViewController?
+    @IBOutlet weak var monthScrollView: UIScrollView!
+
     
+    // MARK: View Controller Events
     override func loadView()
     {
         super.loadView()
@@ -32,6 +34,14 @@ class JFTMonthViewController: UIViewController, UIScrollViewDelegate, JFTPRefres
         buildToolbarForYearViewController()
     }
     
+    override func viewWillDisappear(_ animated: Bool)
+    {
+        super.viewWillDisappear(animated)
+        JFTMonthViewController.CurrentReference = nil
+    }
+    
+    
+    // MARK: Scroll View Controller
     func scrollViewDidScroll(_ scrollView: UIScrollView)
     {
         let translation = scrollView.panGestureRecognizer.translation(in: scrollView.superview)
@@ -48,12 +58,8 @@ class JFTMonthViewController: UIViewController, UIScrollViewDelegate, JFTPRefres
         }
     }
         
-    override func viewWillDisappear(_ animated: Bool)
-    {
-        super.viewWillDisappear(animated)
-        JFTMonthViewController.CurrentReference = nil
-    }
-    
+
+    // MARK: Navigation Events
     func SelectMonth(date: Date)
     {
         selectedDate = date
@@ -73,6 +79,8 @@ class JFTMonthViewController: UIViewController, UIScrollViewDelegate, JFTPRefres
         }
     }
     
+    
+    // MARK: Builder Methods
     private func buildToolbarForYearViewController()
     {
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: self, action: nil)
@@ -84,6 +92,8 @@ class JFTMonthViewController: UIViewController, UIScrollViewDelegate, JFTPRefres
         setToolbarItems(toolbarButtons, animated: true)
     }
     
+    
+    // MARK: Controls Events
     @objc private func onTodayTap()
     {
         if infiniteScrollHandler!.IsSelectedDayToday()
@@ -104,11 +114,14 @@ class JFTMonthViewController: UIViewController, UIScrollViewDelegate, JFTPRefres
         }
     }
     
+    
     @objc private func onCalendarTap()
     {
         performSegue(withIdentifier: "openCalendar", sender: self)
     }
     
+    
+    // MARK: JFTPRefreshable Implamentation
     func SetRefreshEvent()
     {
         self.loadView()

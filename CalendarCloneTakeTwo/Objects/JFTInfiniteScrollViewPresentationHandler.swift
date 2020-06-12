@@ -32,6 +32,8 @@ class JFTInfiniteScrollViewPresentationHandler
     private var finishedAddingView: Bool = true
     private var lastPositionOfCenterObject: CGFloat = 0.0
     
+    
+    
     init(scrollViewToReference: UIScrollView, type: JFTInfiniteScrollViewType, selected date: Date = Date())
     {
         callerScrollViewReference = scrollViewToReference
@@ -47,6 +49,8 @@ class JFTInfiniteScrollViewPresentationHandler
         initializeInfiniteScrollView()
     }
     
+    
+    // MARK: Caller Events
     func OnScrollUpwards()
     {
         if callerScrollViewReference!.contentOffset.y <= verticalOffset
@@ -111,6 +115,8 @@ class JFTInfiniteScrollViewPresentationHandler
         resetToCenter()
     }
     
+    
+    // MARK: State Announcer Methods
     func IsSelectedDayToday() -> Bool
     {
         var granualityType: Calendar.Component
@@ -152,6 +158,101 @@ class JFTInfiniteScrollViewPresentationHandler
         return false
     }
     
+    
+    // MARK: Builder Methods
+    private func addViewToTheTop()
+    {
+        finishedAddingView = false
+        if descendingViewsArray.count > 1
+        {
+            callerScrollViewReference!.viewWithTag(descendingViewsArray.last!.tag)?.removeFromSuperview()
+            descendingViewsArray.removeLast()
+            moveDate(ascending: false, next: true)
+        }
+        offsetViewsForNewTopView()
+        lastPositionOfCenterObject += verticalInfinity ? viewHeight : viewWidth
+        moveDate(ascending: true, next: true)
+        let newView = getViewFor(ascending: true, date: lastAscendingDate)
+        ascendingViewsArray.append(newView)
+        callerScrollViewReference!.addSubview(newView)
+        recalculateScrollViewContentSize()
+        
+        finishedAddingView = true
+        callerScrollViewReference!.setNeedsDisplay()
+    }
+    
+    private func addViewToTheBottom()
+    {
+        finishedAddingView = false
+        if ascendingViewsArray.count > 1
+        {
+            lastPositionOfCenterObject -= verticalInfinity ? viewHeight : viewWidth
+            callerScrollViewReference!.viewWithTag(ascendingViewsArray.last!.tag)?.removeFromSuperview()
+            ascendingViewsArray.removeLast()
+            reoffsetViewsForNewTopView()
+            moveDate(ascending: true, next: false)
+        }
+        moveDate(ascending: false, next: false)
+        let newView = getViewFor(ascending: false, date: lastDescendingDate)
+        descendingViewsArray.append(newView)
+        callerScrollViewReference!.addSubview(newView)
+        recalculateScrollViewContentSize()
+        
+        finishedAddingView = true
+    }
+    
+    private func addFisrtViewToArray(date: Date)
+    {
+        switch currentViewType
+        {
+            case .JFTYearViewType:
+                let newYearView = JFTYearView(year: Calendar.current.component(.year, from: Date()), frame: CGRect(x: 0.0, y: 0.0, width: viewWidth, height: viewHeight))
+                callerScrollViewReference!.addSubview(newYearView)
+                break
+            case .JFTMonthViewType:
+                let newMonthView = JFTMonthView(date: date, frame: CGRect(x: 0.0, y: 0.0, width: viewWidth, height: viewHeight), isSmallView: false)
+                callerScrollViewReference!.addSubview(newMonthView)
+                break
+            case .JFTWeekViewType:
+                let newWeekView = JFTWeekLayoutView(date: date, frame: CGRect(x: 0.0, y: 0.0, width: viewWidth, height: viewHeight))
+                callerScrollViewReference!.addSubview(newWeekView)
+                break
+        }
+    }
+    
+    private func initializeInfiniteScrollView()
+    {
+        let currentDate = selectedDate
+        addFisrtViewToArray(date: currentDate)
+        offsetViewsForNewTopView()
+        moveDate(ascending: true, next: true)
+        moveDate(ascending: false, next: false)
+        let ascendingView = getViewFor(ascending: true, date: lastAscendingDate)
+        ascendingViewsArray.append(ascendingView)
+        callerScrollViewReference!.addSubview(ascendingView)
+        let descendingView = getViewFor(ascending: false, date: lastDescendingDate)
+        descendingViewsArray.append(descendingView)
+        callerScrollViewReference!.addSubview(descendingView)
+        recalculateScrollViewContentSize()
+        callerScrollViewReference!.contentOffset = CGPoint(x: 0.0, y: 0.0)
+        resetInitialPosition()
+    }
+    
+    private func clearScrollView()
+    {
+        for view in callerScrollViewReference!.subviews
+        {
+            view.removeFromSuperview()
+        }
+    }
+    
+    private func cleanupForScrollEventForWeekView()
+    {
+        JFTWeekLayoutView.CleanHighlightFromViews(views: callerScrollViewReference!.subviews as! [JFTWeekLayoutView])
+    }
+    
+    
+    // MARK: Helper Methods
     private func recalculateScrollViewContentSize()
     {
         let calculatedHeight: CGFloat = verticalInfinity ? (CGFloat((callerScrollViewReference?.subviews.count)!) * viewHeight) : viewHeight
@@ -249,84 +350,6 @@ class JFTInfiniteScrollViewPresentationHandler
         }
     }
     
-    private func addViewToTheTop()
-    {
-        finishedAddingView = false
-        if descendingViewsArray.count > 1
-        {
-            callerScrollViewReference!.viewWithTag(descendingViewsArray.last!.tag)?.removeFromSuperview()
-            descendingViewsArray.removeLast()
-            moveDate(ascending: false, next: true)
-        }
-        offsetViewsForNewTopView()
-        lastPositionOfCenterObject += verticalInfinity ? viewHeight : viewWidth
-        moveDate(ascending: true, next: true)
-        let newView = getViewFor(ascending: true, date: lastAscendingDate)
-        ascendingViewsArray.append(newView)
-        callerScrollViewReference!.addSubview(newView)
-        recalculateScrollViewContentSize()
-        
-        finishedAddingView = true
-        callerScrollViewReference!.setNeedsDisplay()
-    }
-    
-    private func addViewToTheBottom()
-    {
-        finishedAddingView = false
-        if ascendingViewsArray.count > 1
-        {
-            lastPositionOfCenterObject -= verticalInfinity ? viewHeight : viewWidth
-            callerScrollViewReference!.viewWithTag(ascendingViewsArray.last!.tag)?.removeFromSuperview()
-            ascendingViewsArray.removeLast()
-            reoffsetViewsForNewTopView()
-            moveDate(ascending: true, next: false)
-        }
-        moveDate(ascending: false, next: false)
-        let newView = getViewFor(ascending: false, date: lastDescendingDate)
-        descendingViewsArray.append(newView)
-        callerScrollViewReference!.addSubview(newView)
-        recalculateScrollViewContentSize()
-        
-        finishedAddingView = true
-    }
-    
-    private func addFisrtViewToArray(date: Date)
-    {
-        switch currentViewType
-        {
-            case .JFTYearViewType:
-                let newYearView = JFTYearView(year: Calendar.current.component(.year, from: Date()), frame: CGRect(x: 0.0, y: 0.0, width: viewWidth, height: viewHeight))
-                callerScrollViewReference!.addSubview(newYearView)
-                break
-            case .JFTMonthViewType:
-                let newMonthView = JFTMonthView(date: date, frame: CGRect(x: 0.0, y: 0.0, width: viewWidth, height: viewHeight), isSmallView: false)
-                callerScrollViewReference!.addSubview(newMonthView)
-                break
-            case .JFTWeekViewType:
-                let newWeekView = JFTWeekLayoutView(date: date, frame: CGRect(x: 0.0, y: 0.0, width: viewWidth, height: viewHeight))
-                callerScrollViewReference!.addSubview(newWeekView)
-                break
-        }
-    }
-    
-    private func initializeInfiniteScrollView()
-    {
-        let currentDate = selectedDate
-        addFisrtViewToArray(date: currentDate)
-        offsetViewsForNewTopView()
-        moveDate(ascending: true, next: true)
-        moveDate(ascending: false, next: false)
-        let ascendingView = getViewFor(ascending: true, date: lastAscendingDate)
-        ascendingViewsArray.append(ascendingView)
-        callerScrollViewReference!.addSubview(ascendingView)
-        let descendingView = getViewFor(ascending: false, date: lastDescendingDate)
-        descendingViewsArray.append(descendingView)
-        callerScrollViewReference!.addSubview(descendingView)
-        recalculateScrollViewContentSize()
-        callerScrollViewReference!.contentOffset = CGPoint(x: 0.0, y: 0.0)
-        resetInitialPosition()
-    }
-    
     private func resetInitialPosition()
     {
         switch currentViewType
@@ -395,14 +418,6 @@ class JFTInfiniteScrollViewPresentationHandler
         }
     }
     
-    private func clearScrollView()
-    {
-        for view in callerScrollViewReference!.subviews
-        {
-            view.removeFromSuperview()
-        }
-    }
-    
     private func viewAtOffset() -> UIView
     {
         let offsetPosition = callerScrollViewReference!.contentOffset
@@ -420,10 +435,5 @@ class JFTInfiniteScrollViewPresentationHandler
     {
         let selectedView = viewAtOffset() as! JFTWeekLayoutView
         selectedView.HighlightSelectedDay()
-    }
-    
-    private func cleanupForScrollEventForWeekView()
-    {
-        JFTWeekLayoutView.CleanHighlightFromViews(views: callerScrollViewReference!.subviews as! [JFTWeekLayoutView])
     }
 }

@@ -13,6 +13,8 @@ class JFTShortCalendarTableViewCell: UITableViewCell
     @IBOutlet weak var ColorCircle: JFTColorCircle!
     @IBOutlet weak var NameLabel: UILabel!
     
+    
+    // MARK: Cell View Events
     override func awakeFromNib()
     {
         super.awakeFromNib()

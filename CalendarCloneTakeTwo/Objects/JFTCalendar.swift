@@ -19,6 +19,7 @@ class JFTCalendar: JFTJSONSerializable
     required init() {}
     
     
+    // MARK: State Announcer Methods
     func CheckIfDateIsFree(date: Date) -> Bool
     {
         for event in Events
@@ -31,6 +32,8 @@ class JFTCalendar: JFTJSONSerializable
         return true
     }
     
+    
+    // MARK: Calendar Self Methods
     func RemoveAlerts()
     {
         for event in Events
@@ -62,6 +65,8 @@ class JFTCalendar: JFTJSONSerializable
         }
     }
     
+    
+    // MARK: JFTJSONSerializable Implamentation
     func Serialize() -> Dictionary<String, Any>
     {
         var jsonDictionary = Dictionary<String,Any>()
@@ -92,7 +97,7 @@ class JFTCalendar: JFTJSONSerializable
     }
     
     
-    
+    // MARK: Calendar IO Managment Methods
     static func LoadLocalCalendars()
     {
         if let calendars: [JFTCalendar]  = JFTUtilities.LoadLocalData(filename: "localcalendars")
@@ -114,6 +119,8 @@ class JFTCalendar: JFTJSONSerializable
         JFTUtilities.SaveLocalData(filename: "localcalendars", objectToSave: LocalCalendars)
     }
     
+    
+    // MARK: Calendar Global Methods
     static func ToggleShowForAllCalendars(on: Bool)
     {
         for calendar in JFTCalendar.LocalCalendars
@@ -122,7 +129,7 @@ class JFTCalendar: JFTJSONSerializable
         }
     }
     
-    static func getDatesOfEventsFor(date: Date) -> [Date]
+    static func GetDatesOfEventsFor(date: Date) -> [Date]
     {
         var dates: [Date] = []
         for calendar in JFTCalendar.LocalCalendars

@@ -10,11 +10,10 @@ import UIKit
 
 @IBDesignable class JFTDayView: UIView, JFTPDatable
 {
+    private var dayObject: JFTDay = JFTDay(date: Date())
     @IBOutlet weak var CurrentDayLableTrailingConstraint: NSLayoutConstraint!
     @IBInspectable var HighlightColor: UIColor = UIColor.purple
-    private var dayObject: JFTDay = JFTDay(date: Date())
     @IBOutlet weak var CurrentDayDateLable: UILabel!
-    
     let xibName: String = "JFTDayView"
     var IsHightlighted: Bool = true
     {
@@ -102,6 +101,8 @@ import UIKit
         self.DayObject = JFTDay(date: date)
     }
     
+    
+    // MARK: Drawing Methods
     override func draw(_ rect: CGRect)
     {
         UIColor.white.setFill()
@@ -131,20 +132,6 @@ import UIKit
         }
     }
     
-    private func calculateHighlightCircleOrigin(_ circleSize: CGFloat) -> CGPoint
-    {
-        let ratioY: CGFloat = 1/21
-        let x: CGFloat = (self.bounds.width / 2) - (circleSize / 2)
-        return CGPoint(x: x, y: self.bounds.size.height * ratioY)
-    }
-    
-    private func calculateEventNotificationCircleOrigin(_ circleSize: CGFloat) -> CGPoint
-    {
-        let y: CGFloat = (CurrentDayDateLable.frame.height * 2)
-        let x: CGFloat = (self.bounds.width / 2) - (circleSize / 2)
-        return CGPoint(x: x, y: y)
-    }
-    
     private func drawHightlightCircle()
     {
         let circleSize = CurrentDayDateLable.frame.height + (CurrentDayDateLable.frame.height * 0.6)
@@ -170,6 +157,22 @@ import UIKit
         circlePath.fill()
     }
     
+    
+    // MARK: Helper Methods
+    private func calculateHighlightCircleOrigin(_ circleSize: CGFloat) -> CGPoint
+    {
+        let ratioY: CGFloat = 1/21
+        let x: CGFloat = (self.bounds.width / 2) - (circleSize / 2)
+        return CGPoint(x: x, y: self.bounds.size.height * ratioY)
+    }
+    
+    private func calculateEventNotificationCircleOrigin(_ circleSize: CGFloat) -> CGPoint
+    {
+        let y: CGFloat = (CurrentDayDateLable.frame.height * 2)
+        let x: CGFloat = (self.bounds.width / 2) - (circleSize / 2)
+        return CGPoint(x: x, y: y)
+    }
+    
     func SetDaysEvent(dates: inout [Date])
     {
         if checkIfDayContainsEvents(dates: &dates)
@@ -190,6 +193,8 @@ import UIKit
         return false
     }
     
+    
+    // MARK: JFTPDatable Implamentation
     func GetDate() -> Date
     {
         DayObject.GetDate()

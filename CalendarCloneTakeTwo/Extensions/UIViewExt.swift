@@ -9,6 +9,7 @@ import UIKit
 
 extension UIView
 {
+    ///Extension: Adds small shadow to the bottom of the view
     func addShadowToBottomOfView()
     {
         self.layer.masksToBounds = false

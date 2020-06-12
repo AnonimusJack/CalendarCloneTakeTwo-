@@ -10,5 +10,6 @@ import Foundation
 
 protocol JFTPRefreshable
 {
+    ///SIgnals the paranet View Controller to refresh it's layout
     func SetRefreshEvent()
 }

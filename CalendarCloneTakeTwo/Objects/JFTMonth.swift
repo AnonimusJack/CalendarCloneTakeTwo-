@@ -107,11 +107,8 @@ class JFTMonth
         initializeDays(month: &month, year: &self.Year)
     }
     
-    func GetDate() -> Date
-    {
-        return Calendar.current.date(from: DateComponents(year: self.Year, month: self.Name.rawValue))!
-    }
-    
+
+    // MARK: Helper Methods
     private func initializeDays(month: inout JFTMonthName, year: inout Int)
     {
         let dayCount: Int = self.getAmountOfDays(month: &month, year: &year)
@@ -130,5 +127,12 @@ class JFTMonth
         let dateComponents: DateComponents = DateComponents(year: year, month: month.rawValue)
         let date: Date = Calendar.current.date(from: dateComponents) ?? Date()
         return Calendar.current.range(of: .day, in: .month, for: date)?.count ?? 0
+    }
+    
+    
+    // MARK: JFTPDatable Implamentation
+    func GetDate() -> Date
+    {
+        return Calendar.current.date(from: DateComponents(year: self.Year, month: self.Name.rawValue))!
     }
 }

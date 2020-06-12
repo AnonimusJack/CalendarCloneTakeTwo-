@@ -10,6 +10,7 @@ import UIKit
 
 extension UIColor
 {
+    ///Extension: Return the name of the color (Used for string encoding)
     var Name: String?
     {
         switch self
@@ -47,6 +48,7 @@ extension UIColor
         }
     }
     
+    ///Extension: Returns a color by name (for string decoding)
     static func ColorByName(name: String) -> UIColor
     {
         switch name

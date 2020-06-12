@@ -10,6 +10,7 @@ import UIKit
 
 extension UITableView
 {
+    ///Extension: Removes all checkmarks inside a tableview
     func RemoveAllCheckmarks()
     {
         for cell in self.visibleCells

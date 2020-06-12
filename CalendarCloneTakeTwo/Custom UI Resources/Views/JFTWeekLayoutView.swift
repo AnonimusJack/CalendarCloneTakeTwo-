@@ -31,6 +31,8 @@ class JFTWeekLayoutView: UIView, JFTPDatable
         layoutDayViews(start: date, frame: frame)
     }
     
+    
+    // MARK: Caller Events
     func HighlightSelectedDay()
     {
         removeHighlightFromDayViews()
@@ -43,13 +45,15 @@ class JFTWeekLayoutView: UIView, JFTPDatable
         JFTWeekLayoutView.selectedWeekday = Calendar.current.component(.weekday, from: Date())
     }
     
+    
+    // MARK: Builder Methods
     private func layoutDayViews(start date: Date, frame: CGRect)
     {
         dayViews.append(JFTDayView(date: date, frame: CGRect(x: 0, y: 0, width: 40.0, height: 40.0)))
         addNextDays(start: date)
         addPreviousDays(start: date)
         setDayViewPositions(frame: frame)
-        var eventsDates = JFTCalendar.getDatesOfEventsFor(date: date)
+        var eventsDates = JFTCalendar.GetDatesOfEventsFor(date: date)
         for dayView in dayViews
         {
             dayView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onJFTDayTouch)))
@@ -58,6 +62,26 @@ class JFTWeekLayoutView: UIView, JFTPDatable
         }
     }
     
+    private func removeHighlightFromDayViews()
+    {
+        for dayView in self.subviews
+        {
+            let dayView = dayView as! JFTDayView
+            dayView.IsHightlighted = false
+            dayView.setNeedsDisplay()
+        }
+    }
+    
+    static func CleanHighlightFromViews(views array: [JFTWeekLayoutView])
+    {
+        for view in array
+        {
+            view.removeHighlightFromDayViews()
+        }
+    }
+    
+    
+    // MARK: Helper Methods
     private func setDayViewPositions(frame: CGRect)
     {
         for i in 0...6
@@ -97,6 +121,13 @@ class JFTWeekLayoutView: UIView, JFTPDatable
         }
     }
     
+    static func SetWeekdayForDate(date: Date)
+    {
+        JFTWeekLayoutView.selectedWeekday = Calendar.current.component(.weekday, from: date)
+    }
+    
+    
+    // MARK: Componenets Events
     @objc private func onJFTDayTouch(sender: UITapGestureRecognizer)
     {
         removeHighlightFromDayViews()
@@ -106,31 +137,10 @@ class JFTWeekLayoutView: UIView, JFTPDatable
         JFTWeekLayoutView.selectedWeekday = selectedView.DayObject.DayOfTheWeek.rawValue
     }
     
-    private func removeHighlightFromDayViews()
-    {
-        for dayView in self.subviews
-        {
-            let dayView = dayView as! JFTDayView
-            dayView.IsHightlighted = false
-            dayView.setNeedsDisplay()
-        }
-    }
-    
+
+    // MARK: JFTPDatable Implamentation
     func GetDate() -> Date
     {
         return date!
-    }
-    
-    static func CleanHighlightFromViews(views array: [JFTWeekLayoutView])
-    {
-        for view in array
-        {
-            view.removeHighlightFromDayViews()
-        }
-    }
-    
-    static func SetWeekdayForDate(date: Date)
-    {
-        JFTWeekLayoutView.selectedWeekday = Calendar.current.component(.weekday, from: date)
     }
 }

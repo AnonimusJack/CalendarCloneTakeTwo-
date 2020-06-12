@@ -13,6 +13,8 @@ class JFTAEEventCalendarTableViewController: UITableViewController
     private static var selectedRow: IndexPath = IndexPath(row: 0, section: 0)
     weak var parentDelegate: JFTAEEventDelegate?
     
+    
+    // MARK: View Controller Events
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -20,6 +22,8 @@ class JFTAEEventCalendarTableViewController: UITableViewController
         tableView(tableView, didSelectRowAt: JFTAEEventCalendarTableViewController.selectedRow)
     }
 
+    
+    // MARK: Table View Events
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
        return JFTCalendar.LocalCalendars.count

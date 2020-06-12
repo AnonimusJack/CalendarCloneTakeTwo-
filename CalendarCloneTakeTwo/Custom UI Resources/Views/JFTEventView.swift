@@ -10,11 +10,11 @@ import UIKit
 
 class JFTEventView: UIView
 {
+    private static var xibName = "JFTEventView"
+    private var colorCode: UIColor = UIColor.systemBlue
     @IBOutlet var view: UIView!
     @IBOutlet weak var EventTitleLabel: UILabel!
     @IBOutlet weak var EventLocationLabel: UILabel!
-    private static var xibName = "JFTEventView"
-    private var colorCode: UIColor = UIColor.systemBlue
     var EventID: String = ""
     
     override init(frame: CGRect)
@@ -52,6 +52,8 @@ class JFTEventView: UIView
         self.view.setNeedsDisplay()
     }
     
+    
+    // MARK: Drawing Methods
     override func draw(_ rect: CGRect)
     {
         let borderPath = UIBezierPath(rect: rect)

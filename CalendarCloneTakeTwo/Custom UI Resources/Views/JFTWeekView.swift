@@ -11,13 +11,15 @@ import UIKit
 @IBDesignable
 class JFTWeekView: UIView, UIScrollViewDelegate
 {
-    @IBOutlet var view: UIView!
-    @IBOutlet weak var WeekLayoutScrollView: UIScrollView!
-    @IBOutlet weak var SelectedDateLable: UILabel!
     private var infiniteScrollHandler: JFTInfiniteScrollViewPresentationHandler?
     private static let xibName: String = "JFTWeekView"
     private static let formatter: DateFormatter = DateFormatter()
     private var finishedLoading: Bool = false
+    @IBOutlet var view: UIView!
+    @IBOutlet weak var WeekLayoutScrollView: UIScrollView!
+    @IBOutlet weak var SelectedDateLable: UILabel!
+
+
     
     override init(frame: CGRect)
     {
@@ -43,6 +45,8 @@ class JFTWeekView: UIView, UIScrollViewDelegate
         finishedLoading = true
     }
     
+    
+    // MARK: Scroll View Events
     func scrollViewDidScroll(_ scrollView: UIScrollView)
     {
         let translation = scrollView.panGestureRecognizer.translation(in: scrollView.superview)
@@ -67,6 +71,8 @@ class JFTWeekView: UIView, UIScrollViewDelegate
         }
     }
     
+    
+    // MARK: Caller Events
     func OnNewSelectedDay()
     {
         

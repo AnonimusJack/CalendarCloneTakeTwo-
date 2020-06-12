@@ -10,12 +10,14 @@ import UIKit
 
 class JFTAECalendarTableViewController: UITableViewController, UITextFieldDelegate
 {
+    private var colorsArray: [UIColor] = [UIColor.red, UIColor.orange, UIColor.yellow, UIColor.green, UIColor.blue, UIColor.purple, UIColor.brown]
     @IBOutlet weak var NameTextField: UITextField!
     var IsEdit: Bool = false
     var Calendar: JFTCalendar = JFTCalendar()
     var ParentReference: JFTPRefreshable?
-    private var colorsArray: [UIColor] = [UIColor.red, UIColor.orange, UIColor.yellow, UIColor.green, UIColor.blue, UIColor.purple, UIColor.brown]
+
     
+    // MARK: View Controller Events
     override func loadView()
     {
         super.loadView()
@@ -35,12 +37,8 @@ class JFTAECalendarTableViewController: UITableViewController, UITextFieldDelega
         ParentReference!.SetRefreshEvent()
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool
-    {
-        self.view.endEditing(true)
-        return false
-    }
     
+    // MARK: Table View Events
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?
     {
         switch section
@@ -83,23 +81,22 @@ class JFTAECalendarTableViewController: UITableViewController, UITextFieldDelega
     {
         if indexPath.section == 2
         {
-            removeAllCheckmarks()
+            tableView.RemoveAllCheckmarks()
             tableView.cellForRow(at: indexPath)!.accessoryType = .checkmark
             self.Calendar.ColorCode = colorsArray[indexPath.row]
         }
     }
     
-    @IBAction func EventsOnSwitch(_ sender: UISwitch)
-    {
-        
-    }
     
+    // MARK: Builder Methods
     private func initializeNavigationBar()
     {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(self.cancelButtonTouch))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneButtonTouch))
     }
     
+    
+    // MARK: Controls Events
     @objc private func cancelButtonTouch()
     {
         self.dismiss(animated: true, completion: nil)
@@ -127,11 +124,9 @@ class JFTAECalendarTableViewController: UITableViewController, UITextFieldDelega
         }
     }
     
-    private func removeAllCheckmarks()
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool
     {
-        for cell in tableView.visibleCells
-        {
-            cell.accessoryType = .none
-        }
+        self.view.endEditing(true)
+        return false
     }
 }

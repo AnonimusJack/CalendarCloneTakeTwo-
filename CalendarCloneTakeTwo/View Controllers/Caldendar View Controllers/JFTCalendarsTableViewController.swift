@@ -12,6 +12,8 @@ class JFTCalendarsTableViewController: UITableViewController, JFTPRefreshable
 {
     private var hideShowBarButton: UIBarButtonItem?
     
+    
+    // MARK: View Controller Events
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -32,6 +34,8 @@ class JFTCalendarsTableViewController: UITableViewController, JFTPRefreshable
         }
     }
     
+    
+    // MARK: Table View Events
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let calendarRef = JFTCalendar.LocalCalendars[indexPath.row]
@@ -53,6 +57,8 @@ class JFTCalendarsTableViewController: UITableViewController, JFTPRefreshable
         return JFTCalendar.LocalCalendars.count
     }
     
+    
+    // MARK: Navigation Events
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
         let destinationNavController = segue.destination as? UINavigationController
@@ -65,6 +71,8 @@ class JFTCalendarsTableViewController: UITableViewController, JFTPRefreshable
         }
     }
     
+    
+    // MARK: Builder Methods
     private func initializeNavigationBar()
     {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(onDoneButtonTouch))
@@ -80,6 +88,8 @@ class JFTCalendarsTableViewController: UITableViewController, JFTPRefreshable
         setToolbarItems(toolbarButtons, animated: true)
     }
     
+    
+    // MARK: Controls Events
     @objc private func onAddCalendarTouch()
     {
         performSegue(withIdentifier: "addCalendar", sender: self)
@@ -104,6 +114,8 @@ class JFTCalendarsTableViewController: UITableViewController, JFTPRefreshable
         self.dismiss(animated: true, completion: nil)
     }
     
+    
+    // MARK: JFTPRefreshable Implamentation
     func SetRefreshEvent()
     {
         DispatchQueue.main.async {

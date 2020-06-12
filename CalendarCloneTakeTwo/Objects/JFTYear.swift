@@ -23,6 +23,8 @@ class JFTYear
         }
     }
     
+    
+    // MARK: JFTPDatable Implamentation
     func GetDate() -> Date
     {
         return Calendar.current.date(from: DateComponents(year: self.Year))!

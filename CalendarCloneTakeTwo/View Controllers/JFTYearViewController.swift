@@ -12,9 +12,12 @@ import UIKit
 class JFTYearViewController: UIViewController, UIScrollViewDelegate
 {
     static var CurrentReference: JFTYearViewController?
-    @IBOutlet weak var yearScrollView: UIScrollView!
     private var infiniteScrollHandler: JFTInfiniteScrollViewPresentationHandler?
+    @IBOutlet weak var yearScrollView: UIScrollView!
     
+    
+    // MARK: View Controller Events
+    //!!Program Entery Point!!//
     override func loadView()
     {
         super.loadView()
@@ -43,6 +46,8 @@ class JFTYearViewController: UIViewController, UIScrollViewDelegate
         JFTYearViewController.CurrentReference = nil
     }
     
+    
+    // MARK: Scroll View Events
     func scrollViewDidScroll(_ scrollView: UIScrollView)
     {
         let translation = scrollView.panGestureRecognizer.translation(in: scrollView.superview)
@@ -59,6 +64,8 @@ class JFTYearViewController: UIViewController, UIScrollViewDelegate
         }
     }
     
+    
+    // MARK: Navigation Events
     func OnMonthSelected(selected date: Date)
     {
         performSegue(withIdentifier: "openMonthsView", sender: date)
@@ -73,6 +80,8 @@ class JFTYearViewController: UIViewController, UIScrollViewDelegate
         }
     }
     
+    
+    // MARK: Builder Methods
     private func buildToolbarForYearViewController()
     {
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: self, action: nil)
@@ -84,6 +93,8 @@ class JFTYearViewController: UIViewController, UIScrollViewDelegate
         setToolbarItems(toolbarButtons, animated: true)
     }
     
+    
+    // MARK: Controls Events
     @objc private func onTodayTap()
     {
         if infiniteScrollHandler!.IsSelectedDayToday()

@@ -56,6 +56,8 @@ class JFTDay: JFTPDatable
         month = Calendar.current.component(.month, from: date)
     }
     
+    
+    // MARK: Operator Overloads
     static func ==(left: JFTDay, right: JFTDay) -> Bool
     {
         if left.DayOfTheMonth == right.DayOfTheMonth && left.month == right.month && left.year == right.year
@@ -65,6 +67,8 @@ class JFTDay: JFTPDatable
         return false
     }
     
+    
+    // MARK: JFTPDatable Implamentation
     func GetDate() -> Date
     {
         return Calendar.current.date(from: DateComponents(year: year, month: month, day: DayOfTheMonth))!

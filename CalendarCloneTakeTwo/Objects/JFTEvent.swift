@@ -54,6 +54,8 @@ class JFTEvent: JFTJSONSerializable
         Notes = ""
     }
     
+    
+    // MARK: Event Methods
     func AddNotification()
     {
         let content = UNMutableNotificationContent()
@@ -75,6 +77,8 @@ class JFTEvent: JFTJSONSerializable
         ID = "\(Title)\(startDateComponenets.year!)\(startDateComponenets.month!)\(startDateComponenets.day!)"
     }
     
+    
+    // MARK: JFTJSONSerializable Implamentation
     func Serialize() -> Dictionary<String, Any>
     {
         var jsonDictionary = Dictionary<String,Any>()
@@ -101,6 +105,8 @@ class JFTEvent: JFTJSONSerializable
         Notes = json["Notes"] as! String
     }
     
+    
+    // MARK: Helper Functions
     static func UpdateComponentsForRepeatingNotification(for event: JFTEvent, type: JFTRepeatType, start date: Date)
     {
         switch type

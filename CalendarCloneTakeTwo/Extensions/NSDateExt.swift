@@ -10,6 +10,7 @@ import Foundation
 
 extension Date
 {
+    ///Extension: Compares two dates by their day
     func CompareByDay(to date: Date) -> Bool
     {
         let order = Calendar.current.compare(self, to: date, toGranularity: .day)

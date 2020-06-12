@@ -9,6 +9,8 @@ import Foundation
 
 class JFTUtilities
 {
+    // MARK: JSON IO Methods
+    ///Saves the sent Object to a JSON file in the documents folder
     static func SaveLocalData<T>(filename: String, objectToSave: T) where T : JFTJSONSerializable
     {
         let fullPath = getDocumentsDirectory().appendingPathComponent(filename)
@@ -29,6 +31,7 @@ class JFTUtilities
         }
     }
     
+    ///Saves the sent  Array of Objects to a JSON file in the documents folder
     static func SaveLocalData<T>(filename: String, objectToSave: [T]) where T : JFTJSONSerializable
     {
         let fullPath = getDocumentsDirectory().appendingPathComponent(filename)
@@ -53,6 +56,7 @@ class JFTUtilities
         }
     }
     
+    ///Returns an Array of Objects from a JSON file in the documents folder
     static func LoadLocalData<T>(filename: String) -> [T]? where T : JFTJSONSerializable
     {
         let fullPath = getDocumentsDirectory().appendingPathComponent(filename)
@@ -86,6 +90,7 @@ class JFTUtilities
         return nil
     }
     
+    ///Gets the current documents folder path
     static private func getDocumentsDirectory() -> URL
     {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)

@@ -14,6 +14,8 @@ class JFTCalendarTableViewCell: UITableViewCell
     @IBOutlet weak var CalendarNameLabel: UILabel!
     var CalendarReference: JFTCalendar = JFTCalendar()
     
+    
+    // MARK: Cell View Events
     override func awakeFromNib()
     {
         super.awakeFromNib()
@@ -25,6 +27,7 @@ class JFTCalendarTableViewCell: UITableViewCell
     }
 
     
+    // MARK: Components Events
     @IBAction func OnChecked(_ sender: JFTCheckCircle)
     {
         CalendarReference.IsVisible = sender.IsChecked

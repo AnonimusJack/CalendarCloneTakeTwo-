@@ -18,6 +18,8 @@ class JFTDayViewController: UIViewController, JFTPRefreshable
     @IBOutlet weak var hoursLayoutView: UIScrollView!
     var selectedDay: JFTDay = JFTDay(date: Date())
     
+    
+    // MARK: View Controller Events
     override func loadView()
     {
         super.loadView()
@@ -51,20 +53,8 @@ class JFTDayViewController: UIViewController, JFTPRefreshable
         JFTDayViewController.CurrentReference = nil
     }
     
-    func SelectDay(selected day: JFTDay)
-    {
-        selectedDay = day
-        let castWeekView = weekLayoutView as! JFTWeekView
-        castWeekView.OnNewSelectedDay()
-        viewInitialization()
-    }
     
-    func SelectDayPreInit(selected date: Date)
-    {
-        selectedDay = JFTDay(date: date)
-        isToday = false
-    }
-    
+    // MARK: Navigation Events
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
         if segue.identifier == "editEvent"
@@ -83,6 +73,21 @@ class JFTDayViewController: UIViewController, JFTPRefreshable
         }
     }
     
+    // MARK: Day View Events
+    func SelectDay(selected day: JFTDay)
+    {
+        selectedDay = day
+        let castWeekView = weekLayoutView as! JFTWeekView
+        castWeekView.OnNewSelectedDay()
+        viewInitialization()
+    }
+    
+    func SelectDayPreInit(selected date: Date)
+    {
+        selectedDay = JFTDay(date: date)
+        isToday = false
+    }
+    
     @objc private func onDayLayoutViewLongPress(sender: UILongPressGestureRecognizer)
     {
         if sender.state == .ended
@@ -92,6 +97,17 @@ class JFTDayViewController: UIViewController, JFTPRefreshable
         }
     }
     
+    
+    // MARK: Event View Events
+    @objc private func onEventViewTouch(sender: UITapGestureRecognizer)
+    {
+        let selectedView = sender.view as! JFTEventView
+        selectedEventID = selectedView.EventID
+        performSegue(withIdentifier: "editEvent", sender: self)
+    }
+    
+    
+    // MARK: Builder Methods
     private func viewInitialization()
     {
         removeAllSubviews()
@@ -102,14 +118,6 @@ class JFTDayViewController: UIViewController, JFTPRefreshable
         }
         layoutEventViews()
         hoursLayoutView.contentOffset = CGPoint(x: 0.0, y: 0.0)
-    }
-    
-    private func removeAllSubviews()
-    {
-        for subview in hoursLayoutView.subviews
-        {
-            subview.removeFromSuperview()
-        }
     }
     
     private func layoutEventViews()
@@ -134,13 +142,6 @@ class JFTDayViewController: UIViewController, JFTPRefreshable
                 }
             }
         }
-    }
-    
-    @objc private func onEventViewTouch(sender: UITapGestureRecognizer)
-    {
-        let selectedView = sender.view as! JFTEventView
-        selectedEventID = selectedView.EventID
-        performSegue(withIdentifier: "editEvent", sender: self)
     }
     
     private func initializeHoursLayoutView()
@@ -196,6 +197,27 @@ class JFTDayViewController: UIViewController, JFTPRefreshable
         hoursLayoutView.addSubview(timeLable)
     }
     
+    private func buildToolbarForYearViewController()
+    {
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: self, action: nil)
+        let todayButton = UIBarButtonItem(title: "Today", style: .plain, target: self, action: #selector(onTodayTap))
+        let flexibleSpace1 = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: self, action: nil)
+        let calendarButton = UIBarButtonItem(title: "Calendar", style: .plain, target: self, action: #selector(onCalendarTap))
+        let inboxButton = UIBarButtonItem(title: "Inbox", style: .plain, target: self, action: nil)
+        let toolbarButtons = [todayButton, flexibleSpace, calendarButton, flexibleSpace1, inboxButton]
+        setToolbarItems(toolbarButtons, animated: true)
+    }
+    
+    
+    // MARK: Helper Methods
+    private func removeAllSubviews()
+    {
+        for subview in hoursLayoutView.subviews
+        {
+            subview.removeFromSuperview()
+        }
+    }
+
     private func calculateYPositionForLabel(hour: Int, minute: Int) -> Double
     {
         let minuteDouble = Double(minute) / 60.0 * 100.0
@@ -216,17 +238,8 @@ class JFTDayViewController: UIViewController, JFTPRefreshable
         return Calendar.current.date(from: addedEventDateComponenets)!
     }
     
-    private func buildToolbarForYearViewController()
-    {
-        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: self, action: nil)
-        let todayButton = UIBarButtonItem(title: "Today", style: .plain, target: self, action: #selector(onTodayTap))
-        let flexibleSpace1 = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: self, action: nil)
-        let calendarButton = UIBarButtonItem(title: "Calendar", style: .plain, target: self, action: #selector(onCalendarTap))
-        let inboxButton = UIBarButtonItem(title: "Inbox", style: .plain, target: self, action: nil)
-        let toolbarButtons = [todayButton, flexibleSpace, calendarButton, flexibleSpace1, inboxButton]
-        setToolbarItems(toolbarButtons, animated: true)
-    }
-    
+
+    // MARK: Controls Events
     @objc private func onTodayTap()
     {
         let castWeekLayoutView = weekLayoutView as! JFTWeekView
@@ -238,6 +251,8 @@ class JFTDayViewController: UIViewController, JFTPRefreshable
         performSegue(withIdentifier: "openCalendar", sender: self)
     }
     
+    
+    // MARK: JFTPRefreshable Implamentation
     func SetRefreshEvent()
     {
         self.loadView()

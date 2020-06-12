@@ -14,6 +14,8 @@ class JFTCheckCircle: UIControl
     @IBInspectable var IsChecked: Bool = true
     @IBInspectable var CircleColor: UIColor = UIColor.blue
 
+    
+    // MARK: Componenets Events
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
     {
         IsChecked = !IsChecked
@@ -21,6 +23,8 @@ class JFTCheckCircle: UIControl
         setNeedsDisplay()
     }
     
+    
+    // MARK: Drawing Methods
     override func draw(_ rect: CGRect)
     {
         let correctedFrame = CGRect(x: rect.origin.x + 2, y: rect.origin.y + 2, width: rect.width - 4, height: rect.height - 4)

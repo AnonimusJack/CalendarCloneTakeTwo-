@@ -17,6 +17,8 @@ class JFTEventTableViewCell: UITableViewCell
     @IBOutlet weak var StartTimeLabel: UILabel!
     @IBOutlet weak var EndTimeLabel: UILabel!
     
+    
+    // MARK: Cell View Events
     override func awakeFromNib()
     {
         super.awakeFromNib()
@@ -27,6 +29,8 @@ class JFTEventTableViewCell: UITableViewCell
         super.setSelected(selected, animated: animated)
     }
     
+    
+    // MARK: Builder Methods
     func SetStartAndEndTimes(start: Date, end: Date)
     {
         StartTimeLabel.text = JFTEventTableViewCell.timeFormatter.string(from: start)

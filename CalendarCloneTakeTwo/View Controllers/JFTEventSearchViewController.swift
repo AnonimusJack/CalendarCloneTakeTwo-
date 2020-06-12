@@ -15,9 +15,12 @@ class JFTEventSearchViewController: UIViewController, UISearchBarDelegate, UITab
     @IBOutlet weak var EventsResultsTable: UITableView!
     @IBOutlet weak var EventSearcbBar: UISearchBar!
     
+    
+    // MARK: View Controller Events
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        JFTEventSearchEngine.SetEngineFormat()
         JFTEventTableViewCell.SetTimeFormat()
         EventSearcbBar.delegate = self
         EventsResultsTable.delegate = self
@@ -25,6 +28,8 @@ class JFTEventSearchViewController: UIViewController, UISearchBarDelegate, UITab
         EventsResultsTable.isHidden = true
     }
     
+    
+    // MARK: SearchBar Events
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String)
     {
         if searchBar.text != ""
@@ -43,9 +48,11 @@ class JFTEventSearchViewController: UIViewController, UISearchBarDelegate, UITab
         }
     }
     
+    
+    // MARK: Table View Events
     func numberOfSections(in tableView: UITableView) -> Int
     {
-        return results.keys.count
+        return Array(results.keys).count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
@@ -85,6 +92,8 @@ class JFTEventSearchViewController: UIViewController, UISearchBarDelegate, UITab
         return eventCell
     }
     
+    
+    // MARK:Navigation Events
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
         if segue.identifier == "editEvent"

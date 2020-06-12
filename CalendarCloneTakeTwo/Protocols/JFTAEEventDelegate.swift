@@ -10,5 +10,6 @@ import Foundation
 
 protocol JFTAEEventDelegate: AnyObject
 {
+    ///Signals the main View Controller to change one of it's String values
     func RaiseStringValueChanged(string: String, type: JFTChangedLableType)
 }

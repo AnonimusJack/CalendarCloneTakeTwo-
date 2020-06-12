@@ -13,6 +13,8 @@ class JFTColorCircle: UIView
 {
     @IBInspectable var CircleColor: UIColor = UIColor.brown
 
+    
+    // MARK: Drawing Methods
     override func draw(_ rect: CGRect)
     {
         drawColoredCircle(rect)

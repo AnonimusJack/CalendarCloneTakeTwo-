@@ -47,6 +47,8 @@ class JFTYearView : UIView, JFTPDatable
         self.addSubview(view)
     }
     
+    
+    // MARK: Builder Methods
     private func layoutMonthViews()
     {
         var m: Int = 0
@@ -64,6 +66,8 @@ class JFTYearView : UIView, JFTPDatable
         }
     }
     
+    
+    // MARK: Helper Methods
     private func calculateViewPosition(row: Int, col: Int) -> CGPoint
     {
         //Recalculate
@@ -77,12 +81,16 @@ class JFTYearView : UIView, JFTPDatable
         return CGPoint(x: x, y: y)
     }
     
+    
+    // MARK: Components Events
     @objc private func onMonthViewTouch(sender: UITapGestureRecognizer)
     {
         let selectedView = sender.view as! JFTMonthView
         JFTYearViewController.CurrentReference!.OnMonthSelected(selected: selectedView.GetDate())
     }
     
+    
+    // MARK:JFTPDatable Implamentation
     func GetDate() -> Date
     {
         YearObject.GetDate()

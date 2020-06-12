@@ -11,18 +11,7 @@ import Foundation
 
 class JFTEventSearchEngine
 {
-    private static func getAllEvents() -> [JFTEvent]
-    {
-        var events: [JFTEvent] = []
-        for calendar in JFTCalendar.LocalCalendars
-        {
-            for event in calendar.Events
-            {
-                events.append(event)
-            }
-        }
-        return events
-    }
+    private static let formatter: DateFormatter = DateFormatter()
     
     static func SearchForEventBy(name: String) -> Dictionary<String,[JFTEvent]>
     {
@@ -38,12 +27,14 @@ class JFTEventSearchEngine
         return JFTEventSearchEngine.sortByDate(events: foundEvents)
     }
     
+    
+    // MARK: Helper Methods
     private static func sortByDate(events: [JFTEvent]) -> Dictionary<String,[JFTEvent]>
     {
         var sortedEvents: Dictionary<String,[JFTEvent]> = [:]
         for event in events
         {
-            let eventDate = JFTEvent.JSONDateFormatter.string(from: event.StartTime)
+            let eventDate = JFTEventSearchEngine.formatter.string(from: event.StartTime)
             if sortedEvents[eventDate] != nil
             {
                 sortedEvents[eventDate]!.append(event)
@@ -54,5 +45,23 @@ class JFTEventSearchEngine
             }
         }
         return sortedEvents
+    }
+    
+    private static func getAllEvents() -> [JFTEvent]
+    {
+        var events: [JFTEvent] = []
+        for calendar in JFTCalendar.LocalCalendars
+        {
+            for event in calendar.Events
+            {
+                events.append(event)
+            }
+        }
+        return events
+    }
+    
+    static func SetEngineFormat()
+    {
+        JFTEventSearchEngine.formatter.dateFormat = "MMM dd,yyyy"
     }
 }

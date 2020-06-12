@@ -18,10 +18,12 @@ enum JFTChangedLableType
 class JFTAEEventMainTableViewController: UITableViewController, UITextFieldDelegate, UITextViewDelegate, JFTAEEventDelegate
 {
     static private var formatter: DateFormatter = DateFormatter()
+    //Internal Variables
     private var selectedCalendarReference: JFTCalendar = JFTCalendar.LocalCalendars[0]
     private var isStartDateSelected: Bool = false
     private var isEndDateSelected: Bool = false
     private var specialAddDate: Date = Date()
+    //External Outlets
     @IBOutlet weak var TitleTF: UITextField!
     @IBOutlet weak var LocationTF: UITextField!
     @IBOutlet weak var IsEntireDaySwitch: UISwitch!
@@ -34,8 +36,11 @@ class JFTAEEventMainTableViewController: UITableViewController, UITextFieldDeleg
     @IBOutlet weak var CalendarNameLabel: UILabel!
     @IBOutlet weak var RepeatLabel: UILabel!
     @IBOutlet weak var AlertLabel: UILabel!
+    //External Switch
     var IsEdit: Bool = false
     
+    
+    // MARK: View Controller Events
     override func loadView()
     {
         super.loadView()
@@ -62,12 +67,21 @@ class JFTAEEventMainTableViewController: UITableViewController, UITextFieldDeleg
         super.viewDidLoad()
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool
+    override func viewWillDisappear(_ animated: Bool)
     {
-        self.view.endEditing(true)
-        return false
+        super.viewWillAppear(animated)
+        if let dayViewController = JFTDayViewController.CurrentReference
+        {
+            dayViewController.SetRefreshEvent()
+        }
+        if let monthViewController = JFTMonthViewController.CurrentReference
+        {
+            monthViewController.SetRefreshEvent()
+        }
     }
+
     
+    // MARK: Table View Events
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
         if indexPath.section == 1
@@ -103,6 +117,8 @@ class JFTAEEventMainTableViewController: UITableViewController, UITextFieldDeleg
         return 44.0
     }
     
+    
+    // MARK: Navigation Events
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
         switch segue.identifier
@@ -124,19 +140,8 @@ class JFTAEEventMainTableViewController: UITableViewController, UITextFieldDeleg
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool)
-    {
-        super.viewWillAppear(animated)
-        if let dayViewController = JFTDayViewController.CurrentReference
-        {
-            dayViewController.SetRefreshEvent()
-        }
-        if let monthViewController = JFTMonthViewController.CurrentReference
-        {
-            monthViewController.SetRefreshEvent()
-        }
-    }
     
+    // MARK: Components Events
     @IBAction func OnStartDatePick(_ sender: UIDatePicker)
     {
         StartDateLabel.text = JFTAEEventMainTableViewController.formatter.string(from: sender.date)
@@ -177,20 +182,6 @@ class JFTAEEventMainTableViewController: UITableViewController, UITextFieldDeleg
     {
         specialAddDate = date
         JFTEvent.WorkingEventHolder.StartTime = date
-    }
-    
-    private func initializeNavigationBar()
-    {
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(self.cancelButtonTouch))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneButtonTouch))
-    }
-    
-    private func buildToolbarForEditEventViewController()
-    {
-        self.navigationController!.isToolbarHidden = false
-        let deleteButton = UIBarButtonItem(title: "Delete", style: .plain, target: self, action: #selector(deleteButtonTouch))
-        let toolbarButtons = [deleteButton]
-        setToolbarItems(toolbarButtons, animated: true)
     }
     
     @objc private func deleteButtonTouch()
@@ -241,13 +232,26 @@ class JFTAEEventMainTableViewController: UITableViewController, UITextFieldDeleg
         }
     }
     
-    private func checkIfRequiredFieldsAreSet() -> Bool
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool
     {
-        if JFTEvent.WorkingEventHolder.StartTime != JFTEvent.WorkingEventHolder.EndTime && JFTEvent.WorkingEventHolder.Title != "" && !(JFTEvent.WorkingEventHolder.EndTime <= Date())
-        {
-            return true
-        }
+        self.view.endEditing(true)
         return false
+    }
+    
+    
+    // MARK: Builder Methods
+    private func initializeNavigationBar()
+    {
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(self.cancelButtonTouch))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneButtonTouch))
+    }
+    
+    private func buildToolbarForEditEventViewController()
+    {
+        self.navigationController!.isToolbarHidden = false
+        let deleteButton = UIBarButtonItem(title: "Delete", style: .plain, target: self, action: #selector(deleteButtonTouch))
+        let toolbarButtons = [deleteButton]
+        setToolbarItems(toolbarButtons, animated: true)
     }
     
     private func initializeDatesForPickersAndLabels(date: Date = Date())
@@ -256,13 +260,6 @@ class JFTAEEventMainTableViewController: UITableViewController, UITextFieldDeleg
         StartDateLabel.text = JFTAEEventMainTableViewController.formatter.string(from: StartDateDP.date)
         JFTEvent.WorkingEventHolder.StartTime = StartDateDP.date
         adjustEndAutomaticlyByAnHour()
-    }
-    
-    private func adjustEndAutomaticlyByAnHour()
-    {
-        EndDateDP.date = Calendar.current.date(byAdding: DateComponents(hour: 1), to: StartDateDP.date)!
-        EndDateLabel.text = JFTAEEventMainTableViewController.formatter.string(from: EndDateDP.date)
-        JFTEvent.WorkingEventHolder.EndTime = EndDateDP.date
     }
     
     private func initForEditting()
@@ -278,6 +275,25 @@ class JFTAEEventMainTableViewController: UITableViewController, UITextFieldDeleg
         selectedCalendarReference = JFTCalendar.CalendarForEventWith(id: JFTEvent.WorkingEventHolder.ID)!
     }
     
+    
+    // MARK: Helper Methods
+    private func adjustEndAutomaticlyByAnHour()
+    {
+        EndDateDP.date = Calendar.current.date(byAdding: DateComponents(hour: 1), to: StartDateDP.date)!
+        EndDateLabel.text = JFTAEEventMainTableViewController.formatter.string(from: EndDateDP.date)
+        JFTEvent.WorkingEventHolder.EndTime = EndDateDP.date
+    }
+    
+    private func checkIfRequiredFieldsAreSet() -> Bool
+    {
+        if JFTEvent.WorkingEventHolder.StartTime != JFTEvent.WorkingEventHolder.EndTime && JFTEvent.WorkingEventHolder.Title != "" && !(JFTEvent.WorkingEventHolder.EndTime <= Date())
+        {
+            return true
+        }
+        return false
+    }
+    
+    // MARK: JFTAEEventDelegate Implementation
     func RaiseStringValueChanged(string: String, type: JFTChangedLableType)
     {
         switch type

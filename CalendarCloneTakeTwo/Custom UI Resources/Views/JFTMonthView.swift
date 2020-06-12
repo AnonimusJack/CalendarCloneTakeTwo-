@@ -10,6 +10,7 @@ import UIKit
 
 class JFTMonthView: UIView, JFTPDatable
 {
+    private var viewSize: CGFloat = 0.0
     @IBInspectable var HighlightColor: UIColor = UIColor.purple
     @IBOutlet weak var SmallViewMonthNameLable: UILabel!
     @IBOutlet var view: UIView!
@@ -23,7 +24,8 @@ class JFTMonthView: UIView, JFTPDatable
     }
     var MonthObject: JFTMonth
     let xibName: String = "JFTMonthView"
-    private var viewSize: CGFloat = 0.0
+    
+    
     
     convenience init(date: Date, frame: CGRect, isSmallView: Bool = false)
     {
@@ -91,6 +93,8 @@ class JFTMonthView: UIView, JFTPDatable
         daysLayoutView.frame = self.repositionDaysLayoutView()
     }
     
+    
+    // MARK: Helper Methods
     private func calculateViewPosition(row: Int, col: Int) -> CGPoint
     {
         let x: CGFloat = (CGFloat(col) / 7) * daysLayoutView.frame.width
@@ -108,6 +112,8 @@ class JFTMonthView: UIView, JFTPDatable
         daysLayoutView.addSubview(monthTitle)
     }
     
+    
+    // MARK: Builder Methods
     private func repositionDaysLayoutView() -> CGRect
     {
         let heightMultiplier: CGFloat = 0.893333
@@ -120,7 +126,7 @@ class JFTMonthView: UIView, JFTPDatable
     private func layoutDayViews()
     {
         var weekCount = 1
-        var eventsDates = JFTCalendar.getDatesOfEventsFor(date: MonthObject.GetDate())
+        var eventsDates = JFTCalendar.GetDatesOfEventsFor(date: MonthObject.GetDate())
         for day in MonthObject.Days
         {
             let dayViewPosition: CGPoint = self.calculateViewPosition(row: weekCount, col: (day.DayOfTheWeek.rawValue - 1))
@@ -138,12 +144,16 @@ class JFTMonthView: UIView, JFTPDatable
         }
     }
     
+    
+    // MARK: Componenets Events
     @objc private func onDayViewTouch(sender: UITapGestureRecognizer)
     {
         let selectedView = sender.view as! JFTDayView
         JFTMonthViewController.CurrentReference!.OnDaySelected(selected: selectedView.GetDate())
     }
     
+    
+    // MARK: JFTPDatable Implamentation
     func GetDate() -> Date
     {
         MonthObject.GetDate()

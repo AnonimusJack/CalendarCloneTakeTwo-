@@ -58,6 +58,7 @@ class JFTAEEventRepeatsTableViewController: UITableViewController
     static var SelectedRepeatType: JFTRepeatType = .Never
     weak var parentDelegate: JFTAEEventDelegate?
 
+    // MARK: View Controller Events
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -66,6 +67,8 @@ class JFTAEEventRepeatsTableViewController: UITableViewController
         tableView(tableView, didSelectRowAt: indexPathToSelect)
     }
     
+    
+    // MARK: Table View Events
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
         tableView.RemoveAllCheckmarks()
@@ -74,6 +77,7 @@ class JFTAEEventRepeatsTableViewController: UITableViewController
     }
     
     
+    // MARK: Helper Methods
     private func setComponentsForRepeatingNotification(type: JFTRepeatType)
     {
         JFTEvent.UpdateComponentsForRepeatingNotification(for: JFTEvent.WorkingEventHolder, type: type, start: JFTEvent.WorkingEventHolder.StartTime)
